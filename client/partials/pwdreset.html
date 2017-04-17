@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- <base href="/"> -->
+
+    <title>XT</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab|Raleway" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Raleway" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/xt.css">
+  </head>
+  <body>
+    <div id="pwdreset" ng-click="toggleDropdown()">
+      <nav>
+        <h1>Xpense Tracker</h1>
+        <div id="logout">
+          <div id="username" ng-click="toggleDropdown()"><i class="material-icons">&#xE851;</i>{{userName}}</div>
+          <div id="dropdownList">
+            <p>My Profile</p>
+            <p>Reset Password</p>
+            <p>Sign Out</p>
+          </div>
+        </div>
+      </nav>
+      <form>
+        <span ng-click="closeReset()">X</span>
+        <p id="err" ng-show="resetErr">{{resetErr}}</p>
+        <fieldset>
+          <legend>{{userName}}: Reset Password</legend>
+          <label><span>Current Password:</span> <input type="password" ng-model='curPwd'></label>
+          <label><span>New Password:</span> <input type="password" ng-model='newPwd'></label>
+          <label><span>Confirm New Password:</span> <input type="password" ng-model='cnewPwd'></label>
+        </fieldset>
+        <p ng-click="updatePassword()"><i class="material-icons">&#xE161;</i>Save</p>
+      </form>
+    </div>
+  </body>
+</html>

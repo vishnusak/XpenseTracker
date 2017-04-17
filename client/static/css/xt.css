@@ -1,0 +1,1029 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  font-family: 'Josefin Slab', serif;
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+}
+
+/* Landing page */
+#landing,
+#start,
+#profile,
+#pwdreset,
+#content,
+#expenses{
+  display: flex;
+  flex-direction: column;
+}
+  #landing nav,
+  #start nav,
+  #profile nav,
+  #pwdreset nav,
+  #content nav,
+  #expenses nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    background-color: black;
+    color: white;
+    padding: 2vh 2vw 0 2vw;
+  }
+    #landing nav h1,
+    #start nav h1,
+    #profile nav h1,
+    #pwdreset nav h1,
+    #content nav h1,
+    #expenses nav h1{
+      font-family: 'Josefin Slab', serif;
+      font-size: 200%;
+      align-items: center;
+      cursor: pointer;
+    }
+    #landing nav #login{
+      list-style: none;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+      #landing nav #login li{
+        padding: 0 1vw 0 1vw;
+        margin: 0 1vw 0 1vw;
+      }
+      #landing nav #login li:hover{
+        background-color: red;
+        box-shadow: 0 0 1vh white;
+        z-index: 25;
+      }
+      #landing nav #login li:active{
+        position: relative;
+        left: 0.1vw;
+        top: 0.1vh;
+      }
+        #landing nav #login li a{
+          text-decoration: none;
+          color: white;
+        }
+
+    #start nav #logout,
+    #profile nav #logout,
+    #pwdreset nav #logout,
+    #content nav #logout,
+    #expenses nav #logout{
+      display: block;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      min-width: 10vw;
+    }
+      #start nav #logout #username,
+      #profile nav #logout #username,
+      #pwdreset nav #logout #username,
+      #content nav #logout #username,
+      #expenses nav #logout #username{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 1vw;
+      }
+        #start nav #logout #username:hover,
+        #profile nav #logout #username:hover,
+        #pwdreset nav #logout #username:hover,
+        #content nav #logout #username:hover,
+        #expenses nav #logout #username:hover{
+          background-color: red;
+          box-shadow: 0 0 1vh white;
+        }
+        #start nav #logout #username:active,
+        #profile nav #logout #username:active,
+        #pwdreset nav #logout #username:active,
+        #content nav #logout #username:active,
+        #expenses nav #logout #username:active{
+          position: relative;
+          left: 0.1vw;
+          top: 0.1vh;
+        }
+      #start nav #logout #dropdownList,
+      #profile nav #logout #dropdownList,
+      #pwdreset nav #logout #dropdownList,
+      #content nav #logout #dropdownList,
+      #expenses nav #logout #dropdownList{
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.9);
+        width: 100%;
+        color: white;
+        text-align: center;
+        display: none;
+        position: absolute;
+        flex-direction: column;
+        z-index: 25;
+      }
+        #start nav #logout #dropdownList p,
+        #profile nav #logout #dropdownList p,
+        #pwdreset nav #logout #dropdownList p,
+        #content nav #logout #dropdownList p,
+        #expenses nav #logout #dropdownList p{
+          margin: 1vh auto;
+          padding: 0 0.5vw;
+        }
+          #start nav #logout #dropdownList p:hover,
+          #profile nav #logout #dropdownList p:hover,
+          #pwdreset nav #logout #dropdownList p:hover,
+          #content nav #logout #dropdownList p:hover,
+          #expenses nav #logout #dropdownList p:hover{
+            box-shadow: 0 0 1vh white;
+          }
+          #start nav #logout #dropdownList p:active,
+          #profile nav #logout #dropdownList p:active,
+          #pwdreset nav #logout #dropdownList p:active,
+          #content nav #logout #dropdownList p:active,
+          #expenses nav #logout #dropdownList p:active{
+            position: relative;
+            left: 0.1vw;
+            top: 0.1vh;
+          }
+
+  #landing #banner{
+    background-image: url('../img/banner.jpg');
+    background-size: auto;
+    height: 60vh;
+    color: white;
+    text-align: center;
+  }
+    #landing #banner h1{
+      font-family: 'Josefin Slab', serif;
+      font-size: 400%;
+      padding-top: 15vh;
+      padding-bottom: 5vh;
+    }
+    #landing #banner h2{
+      background-color: black;
+      background-color: rgba(0, 0, 0, 0.7);
+      max-width: 40vw;
+      margin: auto;
+      padding: 1vh 1vw;
+    }
+
+  #landing #features{
+    margin: 3vh auto;
+  }
+    #landing #features #list{
+      list-style: none;
+      display: flex;
+      justify-content:space-around;
+    }
+      #landing #features #list li{
+        padding: 2vh 2vw;
+        display: flex;
+        flex-direction: column;
+        max-width: 30%;
+        min-width: 30%;
+        cursor: pointer;
+      }
+        #landing #features #list li *{
+          margin: 1vh 0;
+        }
+        #landing #features #list li span{
+          font-size: 400%;
+          text-align: center;
+        }
+        #landing #features #list li h2{
+          text-align: center;
+        }
+      #landing #features #list li:hover{
+        box-shadow: 0 0 2vh black;
+      }
+      #landing #features #list li:active{
+        position: relative;
+        left: 0.1vw;
+        top: 0.1vh;
+      }
+
+  #landing #loginOverlay,
+  #landing #regOverlay{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 30;
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #landing #loginScreen,
+  #landing #registerScreen{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+    background-color: white;
+  }
+    #landing #loginScreen #cancel,
+    #landing #registerScreen #cancel{
+      color: white;
+      background-color: red;
+      font-weight: bold;
+      text-decoration: none;
+      align-self: flex-end;
+      cursor: pointer;
+    }
+    #landing #loginScreen h2,
+    #landing #registerScreen h2{
+      font-family: 'Josefin Slab', serif;
+      font-weight: bold;
+      font-size: 200%;
+      text-align: center;
+      margin: 0.5vh 0;
+    }
+    #landing #loginScreen span,
+    #landing #registerScreen span{
+      text-align: center;
+      padding: 0.5vh 0.5vw;
+      background-color: red;
+      color: white;
+      font-weight: bold;
+    }
+    #landing #loginScreen form,
+    #landing #registerScreen form{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      background-color: white;
+    }
+      #landing #loginScreen form > *,
+      #landing #registerScreen form > *{
+        margin: 1vh 1vw;
+      }
+      #landing #loginScreen form label,
+      #landing #registerScreen form label{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+        #landing #loginScreen form label input,
+        #landing #registerScreen form label input{
+          text-align: center;
+          font-size: 100%;
+          padding: 0.5vh 0.5vw;
+          width: 100%;
+        }
+        #landing #loginScreen form label i,
+        #landing #registerScreen form label i{
+          color: red;
+        }
+      #landing #loginScreen form #loginButtons,
+      #landing #registerScreen form #regButtons{
+        display: flex;
+        justify-content: space-between;
+      }
+        #landing #loginScreen form #loginButtons ul,
+        #landing #registerScreen form #regButtons ul{
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          list-style: none;
+          font-size: 125%;
+        }
+          #landing #loginScreen form #loginButtons ul li,
+          #landing #registerScreen form #regButtons ul li{
+            padding: 0 1vw 0 1vw;
+            cursor: pointer;
+            font-weight: bold;
+          }
+            #landing #loginScreen form #loginButtons ul li:active,
+            #landing #registerScreen form #regButtons ul li:active{
+              position: relative;
+              left: 0.1vw;
+              top: 0.1vh;
+            }
+            #landing #loginScreen form #loginButtons ul li:hover,
+            #landing #registerScreen form #regButtons ul li:hover{
+              background-color: red;
+              color: white;
+            }
+          #landing #loginScreen form #loginButtons ul #signup,
+          #landing #registerScreen form #regButtons ul #signin{
+            font-size: 75%;
+          }
+
+/* Landing page */
+
+/* Start page */
+  #start #main{
+    display: flex;
+    flex-direction: column;
+  }
+    #start #main #addNew{
+      margin: 3vh 0 0;
+    }
+      #start #main #addNew ul{
+        list-style: none;
+        display: flex;
+        justify-content: space-around;
+      }
+        #start #main #addNew ul li{
+          width: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2vh 2vw;
+          margin: 0 5vw 0 5vw;
+          font-size: 125%;
+          cursor: pointer;
+        }
+          #start #main #addNew ul li:hover{
+            /*font-weight: bold;*/
+            background-color: red;
+            color: white;
+            box-shadow: 0 0 1vh black;
+          }
+          #start #main #addNew ul li:active{
+            position: relative;
+            left: 0.1vw;
+            top: 0.1vh;
+          }
+
+    #start #main #mySheets,
+    #start #main #myGroups{
+      margin: 3vh auto;
+      width: 90%;
+    }
+      #start #main #mySheets #heading,
+      #start #main #myGroups #heading{
+        display: flex;
+        align-items: center;
+        font-family: 'Josefin Slab', sans-serif;
+      }
+        #start #main #mySheets #heading span,
+        #start #main #myGroups #heading span{
+          font-size: 250%;
+        }
+        #start #main #mySheets #heading h2,
+        #start #main #myGroups #heading h2{
+          padding-left: 1vw;
+          font-size: 170%;
+        }
+      #start #main #mySheets .showMyContent,
+      #start #main #myGroups .showMyContent{
+        margin: 3vh 0;
+        height: 25vh;
+        display: flex;
+        justify-content: center;
+      }
+        #start #main #mySheets .showMyContent ul,
+        #start #main #myGroups .showMyContent ul{
+          list-style: none;
+          display: flex;
+          width: 95%;
+          justify-content: space-around;
+        }
+          #start #main #mySheets .showMyContent ul li,
+          #start #main #myGroups .showMyContent ul li{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 20%;
+            cursor: pointer;
+            position: relative;
+            font-weight: bold;
+            font-size: 125%;
+          }
+            #start #main #mySheets .showMyContent ul li > i,
+            #start #main #myGroups .showMyContent ul li > i{
+              font-size: 250%;
+              box-shadow: 0 0 0.5vh black;
+              margin-bottom: 1vh;
+            }
+            #start #main #mySheets .showMyContent ul li b,
+            #start #main #myGroups .showMyContent ul li b{
+              position: absolute;
+              left: 0;
+              top: 0;
+              box-shadow: 0 0 0.5vh black;
+              width: 100%;
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
+            }
+              #start #main #mySheets .showMyContent ul li b .material-icons,
+              #start #main #myGroups .showMyContent ul li b .material-icons{
+                position: relative;
+              }
+                #start #main #mySheets .showMyContent ul li b .material-icons:hover,
+                #start #main #myGroups .showMyContent ul li b .material-icons:hover{
+                  background-color: red;
+                  color: white;
+                  box-shadow: 0 0 1vh black;
+                }
+                #start #main #mySheets .showMyContent ul li b .material-icons:active,
+                #start #main #myGroups .showMyContent ul li b .material-icons:active{
+                  position: relative;
+                  left: 0.1vw;
+                  top: 0.1vh;
+                }
+              #start #main #mySheets .showMyContent ul li b .tooltip,
+              #start #main #myGroups .showMyContent ul li b .tooltip{
+                font-style: normal;
+                font-size: 50%;
+                text-align: center;
+                position: absolute;
+                z-index: 1;
+                top: 125%;
+                left: 50%;
+                margin-left: -125%;
+                padding: 0.5vh 0.5vw;
+                border-radius: calc((5vh + 5vw) / 10);
+                background-color: black;
+                color: white;
+              }
+                #start #main #mySheets .showMyContent ul li b .tooltip::after,
+                #start #main #myGroups .showMyContent ul li b .tooltip::after{
+                  content: "";
+                  position: absolute;
+                  bottom: 100%;
+                  left: 50%;
+                  border-width: calc((2vh + 2vw) / 10);
+                  margin-left: calc((2vh + 2vw) / -10);
+                  border-style: solid;
+                  border-color: transparent transparent black transparent;
+                }
+          #start #main #mySheets .showMyContent ul li:hover,
+          #start #main #myGroups .showMyContent ul li:hover{
+            box-shadow: 0 0 1vh black;
+          }
+        #start #main #mySheets .showMyContent span,
+        #start #main #myGroups .showMyContent span{
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+          #start #main #mySheets .showMyContent span:hover,
+          #start #main #myGroups .showMyContent span:hover{
+            background-color: red;
+            color: white;
+            box-shadow: 0 0 1vh black;
+          }
+          #start #main #mySheets .showMyContent span:active,
+          #start #main #myGroups .showMyContent span:active{
+            position: relative;
+            left: 0.1vw;
+            top: 0.1vh;
+          }
+  #start #addSheetOverlay,
+  #start #addGroupOverlay{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 30;
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+  #start #addSheetScreen,
+  #start #addGroupScreen{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+    background-color: white;
+  }
+    #start #addSheetScreen #cancel,
+    #start #addGroupScreen #cancel{
+      background-color: red;
+      color: white;
+      align-self: flex-end;
+      cursor: pointer;
+    }
+    #start #addSheetScreen h2,
+    #start #addGroupScreen h2{
+      font-family: 'Josefin Slab', serif;
+      font-size: 200%;
+      text-align: center;
+      margin: 0.5vh 0;
+    }
+    #start #addSheetScreen span,
+    #start #addGroupScreen span{
+      background-color: red;
+      color: white;
+      font-weight: bold;
+      padding: 0.5vh 0.5vw;
+      text-align: center;
+    }
+    #start #addSheetScreen form,
+    #start #addGroupScreen form{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+      #start #addSheetScreen form > *,
+      #start #addGroupScreen form > *{
+        margin: 1vh 1vw;
+      }
+      #start #addSheetScreen form label,
+      #start #addGroupScreen form label{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+        #start #addSheetScreen form label input,
+        #start #addGroupScreen form label input{
+          text-align: center;
+          font-size: 100%;
+          width: 100%;
+          padding: 0.5vh 0.5vw;
+        }
+        #start #addSheetScreen form label i,
+        #start #addGroupScreen form label i{
+          color: red;
+        }
+      #start #addSheetScreen form .button,
+      #start #addGroupScreen form .button{
+        align-self: center;
+        font-size: 125%;
+        font-weight: bold;
+        padding: 0 1vw 0 1vw;
+        cursor: pointer;
+      }
+        #start #addSheetScreen form .button:active,
+        #start #addGroupScreen form .button:active{
+          position: relative;
+          left: 0.1vw;
+          top: 0.1vh;
+        }
+        #start #addSheetScreen form .button:hover,
+        #start #addGroupScreen form .button:hover{
+          background-color: red;
+          color: white;
+        }
+/* Start page */
+
+/* Profile Page */
+  #profile form,
+  #pwdreset form{
+    display: flex;
+    flex-direction: column;
+    align-items:stretch;
+    margin: 15vh auto;
+    width: 50%;
+    box-shadow: 0 0 1vh black;
+  }
+    #profile form > span,
+    #pwdreset form > span{
+      align-self: flex-end;
+      padding: 0.5vh 0.5vw;
+      background-color: red;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 0 0 3vh 0;
+    }
+    #profile form #err,
+    #pwdreset form #err{
+      text-align: center;
+      color: red;
+      font-weight: bold;
+      margin-bottom: 3vh;
+    }
+    #profile form fieldset,
+    #pwdreset form fieldset{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      padding: 3vh 2vw;
+    }
+      #profile form fieldset legend,
+      #pwdreset form fieldset legend{
+        text-align: center;
+        font-size: 150%;
+        font-weight: bold;
+      }
+      #profile form fieldset label,
+      #pwdreset form fieldset label{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 3vh 0;
+        font-size: 125%;
+      }
+        #profile form fieldset label span,
+        #pwdreset form fieldset label span{
+          width: 30%;
+          text-align: right;
+        }
+        #profile form fieldset label input{
+          border: none;
+        }
+        #profile form fieldset label input,
+        #pwdreset form fieldset label input{
+          width: 65%;
+          font-size: 125%;
+          padding-left: 1vw;
+        }
+    #profile form > p,
+    #pwdreset form > p{
+      align-self: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 2vw 3vh;
+      padding: 1vh 2vw;
+      font-size: 125%;
+      background-color: white;
+      cursor: pointer;
+    }
+    #profile form > p:hover,
+    #pwdreset form > p:hover{
+      background-color: red;
+      color: white;
+      box-shadow: 0 0 1vh black;
+    }
+    #profile form > p:active,
+    #pwdreset form > p:active{
+      position: relative;
+      left: 0.1vw;
+      top: 0.1vh;
+    }
+/* Profile Page */
+
+/* password reset page */
+/* see under profile page */
+/* password reset page */
+
+/* content page */
+  #content #myContent{
+    width: 50%;
+    margin: 5vh auto;
+    display: flex;
+    justify-content: center;
+  }
+    #content #myContent > div{
+      width: 50%;
+      position: relative;
+      display: block;
+    }
+    #content #myContent #sheets{
+      box-shadow: 0 0 1vh black;
+      z-index: 25;
+    }
+    #content #myContent #groups{
+    }
+      #content #myContent #sheets #tab,
+      #content #myContent #groups #tab{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 125%;
+        padding: 1vh 1vw;
+      }
+      #content #myContent #sheets #tab{
+        /*cursor: pointer;*/
+        background-color: red;
+        color: white;
+      }
+      #content #myContent #groups #tab{
+        cursor: pointer;
+        /*background-color: red;*/
+        /*color: white;*/
+      }
+      #content #myContent #sheets #list,
+      #content #myContent #groups #list{
+        width: 200%;
+        font-size: 125%;
+        position: absolute;
+        box-shadow: 0 0 1vh black;
+        max-height: 75vh;
+        overflow-y: auto;
+      }
+      #content #myContent #sheets #list{
+        display: block;
+      }
+      #content #myContent #groups #list{
+        display: none;
+        right: 0;
+      }
+        #content #myContent #sheets #list table,
+        #content #myContent #groups #list table{
+          width: 100%;
+          border-collapse: collapse;
+          border: none;
+          table-layout: fixed;
+        }
+          #content #myContent #sheets #list table thead,
+          #content #myContent #groups #list table thead{
+            background-color: black;
+            color: white;
+          }
+            #content #myContent #sheets #list table thead th,
+            #content #myContent #groups #list table thead th{
+              padding: 1vh 0;
+            }
+            #content #myContent #sheets #list table tbody td,
+            #content #myContent #groups #list table tbody td{
+              text-align: center;
+              padding: 1vh 0;
+            }
+
+/* content page */
+
+/* expenses page */
+  #expenses #expenseSheet{
+    width: 100vw;
+    margin: 0 auto;
+  }
+    #expenses #expenseSheet #entryForm{
+      display: flex;
+      flex-direction: column;
+    }
+      #expenses #expenseSheet #entryForm h2{
+        align-self: center;
+        font-family: 'Josefin Slab', sans-serif;
+        padding: 1vh 1vw;
+        background-color: black;
+        color: white;
+        border-bottom-left-radius: calc((3vw + 3vh)/10);
+        border-bottom-right-radius: calc((3vw + 3vh)/10);
+        margin: 0 0;
+      }
+        #expenses #expenseSheet #entryForm h3{
+          align-self: center;
+          display: flex;
+          align-items: center;
+          margin: 1vh 1vw;
+          padding: 0.5vh 0.5vw;
+          font-weight: normal;
+          cursor: pointer;
+        }
+        #expenses #expenseSheet #entryForm h3:hover{
+          background-color: red;
+          color: white;
+          box-shadow: 0 0 1vh black;
+        }
+        #expenses #expenseSheet #entryForm h3:active{
+          position: relative;
+          left: 0.1vw;
+          top: 0.1vh;
+        }
+      #expenses #expenseSheet #entryForm form{
+        display: flex;
+        flex-direction: column;
+        /*display: none;*/
+        margin: 1vh 0.5vw 0;
+        justify-content: space-around;
+        box-shadow: 0 0 1vh black;
+      }
+        #expenses #expenseSheet #entryForm form > span:first-of-type{
+          align-self: flex-end;
+          padding: 0.5vh 0.5vw;
+          cursor: pointer;
+          background-color: red;
+          color: white;
+          font-weight: bold;
+        }
+          #expenses #expenseSheet #entryForm form > span:first-of-type:active{
+            position: relative;
+            left: 0.1vw;
+            top: 0.1vh;
+          }
+        #expenses #expenseSheet #entryForm form > span:last-of-type{
+          align-self: center;
+          padding: 0.5vh 0.5vw;
+          background-color: red;
+          color: white;
+          font-weight: bold;
+        }
+        #expenses #expenseSheet #entryForm form div{
+          border: none;
+          display: flex;
+          justify-content: space-around;
+          align-items:flex-start;
+        }
+          #expenses #expenseSheet #entryForm form div label{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 13.5%;
+            position: relative;
+          }
+            #expenses #expenseSheet #entryForm form div label span{
+              font-size: 125%;
+              margin: 0.5vh 0;
+              display: flex;
+              align-items: center;
+            }
+              #expenses #expenseSheet #entryForm form div label span i{
+                font-size: 100%;
+                color: red;
+              }
+            #expenses #expenseSheet #entryForm form div label input{
+              font-family: inherit;
+              font-size: 100%;
+              padding: 0.3vh 0.1vw;
+              text-align: center;
+              width: 100%;
+            }
+            #expenses #expenseSheet #entryForm form div label input[type=date]{
+              padding: 0 0;
+            }
+            #expenses #expenseSheet #entryForm form div label select{
+              font-family: inherit;
+              font-size: 100%;
+              padding: 0.3vh 0.1vw;
+              text-align-last: center;
+              width: 100%;
+            }
+            #expenses #expenseSheet #entryForm form div label textarea{
+              padding: 0.3vh 0.1vw;
+              resize: none;
+              width: 100%;
+            }
+        #expenses #expenseSheet #entryForm form #buttons{
+          border: none;
+          display: flex;
+          justify-content:center;
+          align-items:flex-start;
+        }
+          #expenses #expenseSheet #entryForm form #buttons{
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content:center;
+            align-items:flex-start;
+          }
+            #expenses #expenseSheet #entryForm form #buttons p{
+              align-self: center;
+              margin: 2vh 0 0.5vh;
+              padding: 1vh 1vw;
+              display: flex;
+              align-items: center;
+              cursor: pointer;
+              font-size: 125%;
+            }
+            #expenses #expenseSheet #entryForm form #buttons p:last-of-type{
+              align-self: center;
+              margin: 0 0;
+              padding: 0.5vh 0.5vw;
+              cursor: pointer;
+              font-size: 75%;
+            }
+              #expenses #expenseSheet #entryForm form #buttons p:hover{
+                background-color: red;
+                color: white;
+              }
+              #expenses #expenseSheet #entryForm form #buttons p:active{
+                position: relative;
+                left: 0.1vw;
+                top: 0.1vh;
+              }
+
+    #expenses #expenseSheet #sheet{
+      margin: 2vh 0.5vw 0;
+      display: flex;
+      justify-content: space-between;
+    }
+      #expenses #expenseSheet #sheet #list{
+       display: flex;
+       flex-direction: column;
+       width: 80%;
+      }
+        #expenses #expenseSheet #sheet #list #year{
+          display: flex;
+          justify-content: flex-end;
+        }
+          #expenses #expenseSheet #sheet #list #year select{
+            background-color: black;
+            color: white;
+            font-size: 110%;
+            text-align: center;
+            text-align-last: center;
+            padding: 0.5vh 0.5vw;
+            border: none;
+            outline: none;
+            box-shadow: none;
+          }
+        #expenses #expenseSheet #sheet #list #tab{
+        }
+          #expenses #expenseSheet #sheet #list #tab ul{
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+            #expenses #expenseSheet #sheet #list #tab ul li{
+              width: 8.26%;
+              text-align: center;
+              cursor: pointer;
+            }
+            #expenses #expenseSheet #sheet #list #tab ul li:hover{
+              box-shadow: 0 0 1vh black;
+            }
+            #expenses #expenseSheet #sheet #list #tab ul li:active{
+              position: relative;
+              left: 0.1vw;
+              top: 0.1vh;
+            }
+              #expenses #expenseSheet #sheet #list #tab ul .current{
+                background-color: black;
+                color: white;
+                font-size: 125%;
+              }
+        #expenses #expenseSheet #sheet #list #table{
+          max-height: 55vh;
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+          #expenses #expenseSheet #sheet #list #table table{
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            text-align: center;
+          }
+          #expenses #expenseSheet #sheet #list #table th{
+            background-color: black;
+            color: white;
+            padding: 2vh 0;
+          }
+          #expenses #expenseSheet #sheet #list #table th:first-of-type{
+            width: 4vw;
+          }
+          #expenses #expenseSheet #sheet #list #table tbody tr{
+            background-color: whitesmoke;
+          }
+          #expenses #expenseSheet #sheet #list #table td{
+            padding: 0.5vh 0;
+          }
+          #expenses #expenseSheet #sheet #list #table tbody tr td:first-of-type{
+            background-color: none;
+          }
+            #expenses #expenseSheet #sheet #list #table tbody tr td:first-of-type span{
+              cursor: pointer;
+              color: silver;
+            }
+            #expenses #expenseSheet #sheet #list #table tbody tr td:first-of-type span:hover{
+              background-color: red;
+              color: white;
+            }
+            #expenses #expenseSheet #sheet #list #table tbody tr td:first-of-type span:active{
+              position: relative;
+              left: 0.1vw;
+              top: 0.1vh;
+            }
+
+        #expenses #expenseSheet #sheet #summary{
+          width: 19%;
+          text-align: center;
+        }
+          #expenses #expenseSheet #sheet #summary table{
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            text-align: center;
+            border: 1px solid black;
+          }
+            #expenses #expenseSheet #sheet #summary table th{
+              background-color: black;
+              color: white;
+              padding: 1vh 0 1vh 0;
+              font-size: 125%;
+              font-weight: bold;
+            }
+              #expenses #expenseSheet #sheet #summary table td{
+                padding: 0.5vh 0 0.5vh 0;
+              }
+              #expenses #expenseSheet #sheet #summary table tbody tr td{
+                font-size: 110%;
+                font-weight: bold;
+                border-bottom: 1px solid black;
+              }
+              #expenses #expenseSheet #sheet #summary table tfoot tr td{
+                font-size: 110%;
+                font-weight: bold;
+                background-color: black;
+                color: white;
+              }
+              #expenses #expenseSheet #sheet #summary table tbody tr:first-of-type td{
+                color: green;
+              }
+              #expenses #expenseSheet #sheet #summary table tbody tr:last-of-type td{
+                color: red;
+              }
+
+/* expenses page */

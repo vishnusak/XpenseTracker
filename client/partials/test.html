@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>test</title>
+
+    <script type="text/javascript" src="../../client/static/js/d3.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab|Raleway" rel="stylesheet">
+    <style>
+      .chart div{
+        font: 10px sans-serif;
+        background-color: steelblue;
+        text-align: right;
+        padding: 3px;
+        margin: 1px;
+        color: white;
+      }
+      .d3Chart div{
+        font: 10px sans-serif;
+        background-color: deepskyblue;
+        text-align: right;
+        padding: 3px;
+        margin: 1px;
+        color: white;
+      }
+
+      .SVGChart rect{
+        fill: gold;
+      }
+
+      .SVGChart text{
+        fill: white;
+        font: 10px sans-serif;
+        text-anchor: end;
+      }
+
+      .SVGChart2 rect{
+        fill: goldenrod;
+      }
+
+      .SVGChart2 text{
+        fill: white;
+        font: 10px sans-serif;
+        text-anchor: end;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chart">
+      <div style="width: 40px;">4</div>
+      <div style="width: 80px;">8</div>
+      <div style="width: 160px;">16</div>
+      <div style="width: 320px;">32</div>
+      <div style="width: 640px;">64</div>
+      <div style="width: 1280px;">1280</div>
+    </div>
+    <div class="d3Chart">
+
+    </div>
+
+    <svg class="SVGChart" width="420" height="120">
+      <g transform="translate(0,0)">
+        <rect width="40" height="19"></rect>
+        <text x="37" y="9.5" dy=".35em">4</text>
+      </g>
+      <g transform="translate(0,20)">
+        <rect width="80" height="19"></rect>
+        <text x="77" y="9.5" dy=".35em">8</text>
+      </g>
+      <g transform="translate(0,40)">
+        <rect width="150" height="19"></rect>
+        <text x="147" y="9.5" dy=".35em">15</text>
+      </g>
+      <g transform="translate(0,60)">
+        <rect width="160" height="19"></rect>
+        <text x="157" y="9.5" dy=".35em">16</text>
+      </g>
+      <g transform="translate(0,80)">
+        <rect width="230" height="19"></rect>
+        <text x="227" y="9.5" dy=".35em">23</text>
+      </g>
+      <g transform="translate(0,100)">
+        <rect width="420" height="19"></rect>
+        <text x="417" y="9.5" dy=".35em">42</text>
+      </g>
+    </svg>
+
+    <svg class="SVGChart2"></svg>
+    <script type="text/javascript">
+      // var body = d3.select('body')
+      // var div = body.append('div')
+      // div.html("Hello World!")
+      //
+      // d3.select('body')
+      // .append('div')
+      // .html("Another Div")
+      // .style("color", "green")
+      // .style("border", "1px solid black")
+
+      var data = [3,4,12,18,30]
+      d3.select('.d3Chart')
+        .selectAll('div')
+          .data(data)
+        .enter().append('div')
+          .style("width", function(d){ return `${d*10}px`})
+          .text(function(d){ return d })
+
+      var width = 420, barHeight = 20
+      var d3scale = d3.scaleLinear()
+                      .domain([0, d3.max(data)])
+                      .range([0, width])
+
+      var chart =  d3.select('.SVGChart2')
+                     .attr("width", width)
+                     .attr("height", barHeight * data.length)
+
+      var bar = chart.selectAll('g')
+                    .data(data)
+                  .enter().append('g')
+                    .attr("transform", function(d, i){return `translate(0, ${i * barHeight})`})
+               bar.append('rect')
+                    .attr('width', d3scale)
+                    .attr('height', barHeight-1)
+               bar.append('text')
+                    .attr('x', function(d){return d3scale(d) - 3})
+                    .attr('y', barHeight/2)
+                    .attr('dy', '.35em')
+                    .text(function(d){return d})
+    </script>
+  </body>
+</html>

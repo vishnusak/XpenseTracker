@@ -1,0 +1,122 @@
+<div id="expenses" ng-click="toggleDropdown($event, 1)">
+  <nav>
+    <h1 ng-click="goHome($event)">Xpense Tracker</h1>
+    <div id="logout">
+      <div id="username" ng-model="user" ng-click="toggleDropdown($event)"><i class="material-icons">&#xE851;</i>{{ user }}</div>
+      <div id="dropdownList" ng-model="userDropdown" ng-style="userDropdown">
+        <p ng-click="showProfile($event)">My Profile</p>
+        <p ng-click="resetPwd($event)">Reset Password</p>
+        <p ng-click="signOut($event)">Sign Out</p>
+      </div>
+    </div>
+  </nav>
+  <div id="expenseSheet">
+    <div id="entryForm">
+      <h2>{{ sheetName }}</h2>
+      <h3 ng-style="displayButton" ng-click="showForm()"><span class="material-icons">&#xE146;</span>Add New Expense</h3>
+      <form ng-style="displayForm">
+        <span ng-click="hideForm()">X</span>
+        <span ng-show="errMsg" ng-model="errMsg">{{ errMsg }}</span>
+        <div>
+          <!-- onkeydown (return false) added to date field to force the user to use the date picker instead of typing in a date -->
+          <label><span>Date<i class="material-icons" ng-show="err['date']">&#xE002;</i></span><input type="date" ng-model="expense['date']" onkeydown="return false" tabindex="1"></label>
+
+          <label><span>Category<i class="material-icons" ng-show="err['category']">&#xE002;</i></span><input type="text" list="catList" ng-model="expense['category']" tabindex="2"></label>
+          <datalist id="catList">
+            <option ng-repeat="category in categories track by category['category']" value="{{category['category']}}"></option>
+          </datalist>
+
+          <label><span>Sub-Category<i class="material-icons" ng-show="err['subcategory']">&#xE002;</i></span><input type="text" list="subcatList" ng-model="expense['subcategory']" tabindex="3"></label>
+          <datalist id="subcatList">
+            <option ng-repeat="subcat in subcategories track by subcat['subcategory']" value="{{subcat['subcategory']}}"></option>
+          </datalist>
+
+          <label><span>Amount<i class="material-icons" ng-show="err['amount']">&#xE002;</i></span><input type="number" step="0.01" ng-model="expense['amount']" tabindex="4"></label>
+
+          <label><span>Mode of Payment<i class="material-icons" ng-show="err['mode']">&#xE002;</i></span>
+            <select ng-model="expense['mode']" tabindex="5">
+              <option value="" hidden="hidden"></option>
+              <option value="Card">Card</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </label>
+
+          <label ng-show="expense['mode'] == 'Card'"><span>Card Provider<i class="material-icons" ng-show="err['cardtype']">&#xE002;</i></span><input type="text" ng-model="expense['cardtype']" tabindex="6"></label>
+
+          <label><span>Notes<i class="material-icons" ng-show="err['notes']">&#xE002;</i></span><textarea ng-model="expense['notes']" tabindex="7">{{ expense['notes'] }}</textarea></label>
+        </div>
+        <div id="buttons">
+          <p ng-click="saveExpense(expense['expense_id'])" tabindex="8"><i class="material-icons">&#xE161;</i>Save</p>
+          <p ng-click="resetForm(expense['date'])" tabindex="9">reset form</p>
+        </div>
+      </form>
+    </div>
+    <div id="sheet">
+      <div id="list">
+        <div id="year">
+          <select ng-model="curYear" ng-change="changeYear()">
+            <option ng-repeat="year in years" value="{{year['year']}}">{{year['year']}}</option>
+          </select>
+        </div>
+        <div id="tab">
+          <ul>
+            <li ng-repeat="month in months" ng-class="class[{{month['id']}}]" ng-click="getThisMonth(month['id'])">{{month['name']}}</li>
+          </ul>
+        </div>
+        <div id="table">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Sub Category</th>
+                <th>Amount</th>
+                <th>Mode of Payment</th>
+                <th>Card Provider</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="ex in sheetExpenses" ng-init="sheetSummary(ex['amount'])">
+                <td><span class="material-icons" ng-click="deleteExpense($index)">&#xE872;</span><span class="material-icons" ng-click="editExpense($index)">&#xE3C9;</span></td>
+                <td>{{ex['day']}}-{{monthText(ex['month'])}}-{{ex['year']}}</td>
+                <td>{{ex['category']}}</td>
+                <td>{{ex['subcategory']}}</td>
+                <td>{{ex['amount']}}</td>
+                <td>{{ex['mode']}}</td>
+                <td>{{ex['cardtype']}}</td>
+                <td>{{ex['notes']}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+        <div id="summary">
+          <table>
+            <thead>
+              <tr>
+                <th colspan=2 ng-model="curMon">{{curMon}}-{{curYear}}:  Summary</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>IN</th>
+                <td ng-model="inFlow">{{(inFlow * -1)}}</td>
+              </tr>
+              <tr>
+                <th>OUT</th>
+                <td ng-model="outFlow">{{outFlow}}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Cash Flow</th>
+                <td ng-model="totCashFlow" ng-style="cashFlowStyle">{{totCashFlow}}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+    </div>
+  </div>
+</div>

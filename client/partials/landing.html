@@ -1,0 +1,93 @@
+<div id="landing">
+  <nav>
+    <h1>Xpense Tracker</h1>
+    <ul id="login">
+      <li><a href ng-click="showLogin()">Sign In</a></li>
+      <li><a href ng-click="showRegister()">Sign Up</a></li>
+    </ul>
+  </nav>
+
+  <div id="banner">
+    <h1>Get a handle on your expenses</h1>
+    <h2>See where, when and how you are spending your money</h2>
+  </div>
+
+  <div id="features">
+    <ul id="list">
+      <li>
+        <span class="material-icons">&#xE7FD;</span>
+        <!-- <i class="material-icons">person</i> -->
+        <h2>Individual Tracking</h2>
+        <p>Create as many trackers as you need</p>
+      </li>
+      <li>
+        <span class="material-icons">&#xE7EF;</span>
+        <!-- <i class="material-icons">group</i> -->
+        <h2>Group Tracking</h2>
+        <p>Share your tracker with family and friends</p>
+      </li>
+      <li>
+        <span class="material-icons">&#xE85C;</span>
+        <!-- <i class="material-icons">assessment</i> -->
+        <h2>Visualizations</h2>
+        <p>See your spend trend over time</p>
+      </li>
+    </ul>
+  </div>
+
+  <div id="loginOverlay" ng-style="displayLogin">
+    <div id="loginScreen">
+      <i id="cancel" ng-click="close()" class="material-icons">&#xE5CD;</i>
+      <h2>XpenseTracker</h2>
+      <span id="logErr" ng-show="login['err']">{{ login['err'] }}</span>
+      <form>
+        <label>
+          <input type="text" ng-model="login['userName']" placeholder="User Name or Email" required><i class="material-icons" ng-show="err['userName']">&#xE002;</i>
+        </label>
+        <label>
+          <input type="password" ng-model="login['password']" placeholder="Password" required><i class="material-icons" ng-show="err['password']">&#xE002;</i>
+        </label>
+        <div id="loginButtons">
+          <ul>
+            <li id="signup" ng-click="showRegister()">SignUp first?</li>
+            <li id="signin" ng-click="loginUser()">SignIn</li>
+          </ul>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="regOverlay" ng-style="displayRegister">
+    <div id="registerScreen">
+      <i id="cancel" ng-click="close()" class="material-icons">&#xE5CD;</i>
+      <h2>XpenseTracker</h2>
+      <span id="regErr" ng-show="register['err']">{{ register['err'] }}</span>
+      <form>
+        <label>
+          <input type="text" ng-model="register['firstName']" placeholder="First Name" required><i class="material-icons" ng-show="err['firstName']">&#xE002;</i>
+        </label>
+        <label>
+          <input type="text" ng-model="register['lastName']" placeholder="Last Name" required><i class="material-icons" ng-show="err['lastName']">&#xE002;</i>
+        </label>
+        <label>
+          <input type="email" ng-model="register['email']" placeholder="Email" required><i class="material-icons" ng-show="err['email']">&#xE002;</i>
+        </label>
+        <label>
+          <input type="text" ng-model="register['userName']" placeholder="User Name" required><i class="material-icons" ng-show="err['userName']">&#xE002;</i>
+        </label>
+        <label>
+          <input type="password" ng-model="register['password']" placeholder="Password" required><i class="material-icons" ng-show="err['password']">&#xE002;</i>
+        </label>
+        <label>
+          <input type="password" ng-model="register['cpassword']" placeholder="Confirm Password" required><i class="material-icons" ng-show="err['cpassword']">&#xE002;</i>
+        </label>
+        <div id="regButtons">
+          <ul>
+            <li id="signin" ng-click="showLogin()">SignIn instead?</li>
+            <li id="signup" ng-click="registerUser()">SignUp</li>
+          </ul>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

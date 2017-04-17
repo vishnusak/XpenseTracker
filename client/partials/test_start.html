@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- <base href="/"> -->
+
+    <title>XT</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab|Raleway" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Raleway" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/xt.css">
+  </head>
+  <body>
+    <div id="start" ng-click="toggleDropdown(1)">
+      <nav>
+        <h1>Xpense Tracker</h1>
+        <div id="logout">
+          <div id="username" ng-model="userName" ng-click="toggleDropdown()"><i class="material-icons">&#xE851;</i>{{ userName }}</div>
+          <div id="dropdownList" ng-style="userDropdown">
+            <p ng-click="showProfile()">My Profile</p>
+            <p ng-click="resetPwd()">Reset Password</p>
+            <p ng-click="signOut()">Sign Out</p>
+          </div>
+        </div>
+      </nav>
+      <div id="main">
+        <div id="addNew">
+          <ul>
+            <li ng-click="addNewSheet()"><span class="material-icons">&#xE146;</span>Add a New Sheet</li>
+            <li ng-click="addNewGroup()"><span class="material-icons">&#xE146;</span>Create a New Group</li>
+          </ul>
+        </div>
+        <div id="mySheets">
+          <div id="heading">
+            <span class="material-icons">&#xE02F;</span>
+            <!-- <i class="material-icons">library_books</i> -->
+            <h2>My Sheets</h2>
+          </div>
+          <div class="showMyContent">
+            <span class="material-icons" ng-show="prevSheet">&#xE408;</span>
+            <ul>
+              <li ng-show="sheet1">{{ sheet1 }}</li>
+              <li ng-show="sheet2">{{ sheet2 }}</li>
+              <li ng-show="sheet3">{{ sheet3 }}</li>
+              <li ng-show="sheet4">{{ sheet4 }}</li>
+              <li ng-show="sheet5">{{ sheet5 }}</li>
+            </ul>
+            <span class="material-icons" ng-show="nextSheet">&#xE409;</span>
+          </div>
+        </div>
+        <div id="myGroups">
+          <div id="heading">
+            <span class="material-icons">&#xE7EF;</span>
+            <!-- <span class="material-icons">group</span> -->
+            <h2>My Groups</h2>
+          </div>
+          <div class="showMyContent">
+            <span class="material-icons" ng-show="prevGroup">&#xE408;</span>
+            <ul>
+              <li ng-show="group1">{{ group1 }}</li>
+              <li ng-show="group2">{{ group2 }}</li>
+              <li ng-show="group3">{{ group3 }}</li>
+              <li ng-show="group4">{{ group4 }}</li>
+              <li ng-show="group5">{{ group5 }}</li>
+            </ul>
+            <span class="material-icons" ng-show="nextGroup">&#xE409;</span>
+          </div>
+        </div>
+      </div>
+      <div id="addSheetOverlay" ng-style="displayAddSheet">
+        <div id="addSheetScreen">
+          <span id="cancel" ng-click="close()">X</span>
+          <h2>XpenseTracker</h2>
+          <span id="addSheetErr" ng-show="addSheet['err']">{{ addSheet['err'] }}</span>
+          <form>
+            <input type="text" ng-style="snErr" ng-model="addSheet['userName']" placeholder="New Sheet Name" required>
+            <p id="button">Start Sheet</p>
+          </form>
+        </div>
+      </div>
+      <div id="addGroupOverlay" ng-style="displayAddGroup">
+        <div id="addGroupScreen">
+          <span id="cancel" ng-click="close()">X</span>
+          <h2>XpenseTracker</h2>
+          <span id="addGroupErr" ng-show="addGroup['err']">{{ addGroup['err'] }}</span>
+          <form>
+            <input type="text" ng-style="snErr" ng-model="addGroup['userName']" placeholder="New Group Name" required>
+            <p id="button">Create Group</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

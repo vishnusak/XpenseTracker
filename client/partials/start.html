@@ -1,0 +1,94 @@
+<div id="start" ng-click="toggleDropdown($event, 1)">
+  <nav>
+    <h1 ng-click="goHome($event)">Xpense Tracker</h1>
+    <div id="logout">
+      <div id="username" ng-model="user" ng-click="toggleDropdown($event)"><i class="material-icons">&#xE851;</i>{{ user }}</div>
+      <div id="dropdownList" ng-model="userDropdown" ng-style="userDropdown">
+        <p ng-click="showProfile($event)">My Profile</p>
+        <p ng-click="resetPwd($event)">Reset Password</p>
+        <p ng-click="signOut($event)">Sign Out</p>
+      </div>
+    </div>
+  </nav>
+  <div id="main">
+    <div id="addNew">
+      <ul>
+        <li ng-click="addNewSheet()"><span class="material-icons">&#xE02E;</span>Add a New Sheet</li>
+        <li ng-click="addNewGroup()"><span class="material-icons">&#xE02E;</span>Create a New Group</li>
+      </ul>
+    </div>
+
+    <div id="mySheets" ng-model="showSheets" ng-show="showSheets">
+      <div id="heading">
+        <span class="material-icons">&#xE02F;</span>
+        <h2>My Sheets</h2>
+      </div>
+      <div class="showMyContent">
+        <span class="material-icons" ng-show="prevSheet"  ng-click="showPrevSheet()">&#xE408;</span>
+        <ul>
+          <li ng-repeat="idx in sheetIdxArr" ng-click="showSheet(sheets[idx])" ng-mouseenter="sheetMenu=true" ng-mouseleave="sheetMenu=false" ng-init="sheetMenu=false" ng-model="sheets[idx]['sheetName']">
+            <b ng-show="sheetMenu">
+              <i class="material-icons" ng-mouseenter="editTT=true" ng-mouseleave="editTT=false" ng-init="editTT=false" ng-click="$event.stopImmediatePropagation(); renameSheet(sheets[idx], idx)">&#xE3C9;
+                <i class="tooltip" ng-show="editTT">RENAME</i>
+              </i>
+              <i class="material-icons" ng-mouseenter="delTT=true" ng-mouseleave="delTT=false" ng-init="delTT=false" ng-click="$event.stopImmediatePropagation(); deleteSheet(sheets[idx], idx)">&#xE872;
+                <i class="tooltip" ng-show="delTT">DELETE</i>
+              </i>
+              <i class="material-icons" ng-mouseenter="shrTT=true" ng-mouseleave="shrTT=false" ng-init="shrTT=false" ng-click="$event.stopImmediatePropagation(); shareSheet(sheets[idx])">&#xE7F0;
+                <i class="tooltip" ng-show="shrTT">SHARE</i>
+              </i>
+            </b>
+            <i class="material-icons">&#xE896;</i>
+            {{ sheets[idx]['sheetName'] }}
+          </li>
+        </ul>
+        <span class="material-icons" ng-show="nextSheet"  ng-click="showNextSheet()">&#xE409;</span>
+      </div>
+    </div>
+
+    <div id="myGroups" ng-model="showGroups" ng-show="showGroups">
+      <div id="heading">
+        <span class="material-icons">&#xE7EF;</span>
+        <!-- <span class="material-icons">group</span> -->
+        <h2>My Groups</h2>
+      </div>
+      <div class="showMyContent">
+        <span class="material-icons" ng-show="prevGroup" ng-click="showPrevGroup()">&#xE408;</span>
+        <ul>
+          <li ng-repeat="idx in groupIdxArr">{{ groups[idx]['groupName'] }}</li>
+        </ul>
+        <span class="material-icons" ng-show="nextGroup"  ng-click="showNextGroup()">&#xE409;</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="addSheetOverlay" ng-style="displayAddSheet">
+    <div id="addSheetScreen">
+      <i id="cancel" ng-click="close()" class="material-icons">&#xE5CD;</i>
+      <h2>XpenseTracker</h2>
+      <span id="addSheetErr" ng-show="addSheet['err']">{{ addSheet['err'] }}</span>
+      <form>
+        <label>
+          <input type="text" ng-model="addSheet['sheetName']" placeholder="New Sheet Name" required>
+          <i class="material-icons" ng-show="err['sheetName']">&#xE002;</i>
+        </label>
+        <p class="button" ng-click="startSheet()" ng-show="sstartBtn">Start Sheet</p>
+        <p class="button" ng-click="updateSheet()" ng-show="srenameBtn">Save</p>
+      </form>
+    </div>
+  </div>
+
+  <div id="addGroupOverlay" ng-style="displayAddGroup">
+    <div id="addGroupScreen">
+      <i id="cancel" ng-click="close()" class="material-icons">&#xE5CD;</i>
+      <h2>XpenseTracker</h2>
+      <span id="addGroupErr" ng-show="addGroup['err']">{{ addGroup['err'] }}</span>
+      <form>
+        <label>
+          <input type="text" ng-model="addGroup['groupName']" placeholder="New Group Name" required><i class="material-icons" ng-show="err['groupName']">&#xE002;</i>
+        </label>
+        <p id="button" ng-click="createGroup()">Create Group</p>
+      </form>
+    </div>
+  </div>
+</div>

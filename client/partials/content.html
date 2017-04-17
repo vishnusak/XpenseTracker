@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- <base href="/"> -->
+
+    <title>XT</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab|Raleway" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Raleway" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/xt.css">
+  </head>
+  <body>
+    <div id="content" ng-click="toggleDropdown()">
+      <nav>
+        <h1>Xpense Tracker</h1>
+        <div id="logout">
+          <div id="username" ng-click="toggleDropdown()"><i class="material-icons">&#xE851;</i>{{userName}}</div>
+          <div id="dropdownList">
+            <p>My Profile</p>
+            <p>Reset Password</p>
+            <p>Sign Out</p>
+          </div>
+        </div>
+      </nav>
+      <div id="myContent">
+        <div id="sheets">
+          <div id="tab">
+            <span class="material-icons">&#xE02F;</span><p>My Sheets</p>
+          </div>
+          <div id="list">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Owned By</th>
+                  <th>Created On</th>
+                  <th>Shared With</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>sheet Title</td>
+                  <td>owner</td>
+                  <td>date</td>
+                  <td>groupName</td>
+                </tr>
+                <tr>
+                  <td>sheet Title</td>
+                  <td>owner</td>
+                  <td>date</td>
+                  <td>groupName</td>
+                </tr>
+                <tr>
+                  <td>sheet Title</td>
+                  <td>owner</td>
+                  <td>date</td>
+                  <td>groupName</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="groups">
+          <div id="tab">
+            <span class="material-icons">&#xE7EF;</span><p>My Groups</p>
+          </div>
+          <div id="list">
+            <table>
+              <thead>
+                <tr>
+                  <th>Group Name</th>
+                  <th>Created By</th>
+                  <th>Members</th>
+                  <th>Sheets Shared</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>name of group</td>
+                  <td>owner</td>
+                  <td>list of userNames</td>
+                  <td>list of sheet titles</td>
+                </tr>
+                <tr>
+                  <td>name of group</td>
+                  <td>owner</td>
+                  <td>list of userNames</td>
+                  <td>list of sheet titles</td>
+                </tr>
+                <tr>
+                  <td>name of group</td>
+                  <td>owner</td>
+                  <td>list of userNames</td>
+                  <td>list of sheet titles</td>
+                </tr>
+                <tr>
+                  <td>name of group</td>
+                  <td>owner</td>
+                  <td>list of userNames</td>
+                  <td>list of sheet titles</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
