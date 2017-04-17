@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `xt`.`expenses` (
   `month` INT NOT NULL,
   `year` INT NOT NULL,
   `category` VARCHAR(255) NOT NULL,
-  `sub-category` VARCHAR(255) NOT NULL,
+  `subcategory` VARCHAR(255) NOT NULL,
   `amount` FLOAT NOT NULL,
   `paymentType` VARCHAR(10) NOT NULL,
   `card` VARCHAR(10) NULL,
