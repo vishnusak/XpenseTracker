@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `XT`.`expenses` (
   CONSTRAINT `fk_expenses_sheets`
     FOREIGN KEY (`sheet_id`)
     REFERENCES `XT`.`sheets` (`sheet_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
