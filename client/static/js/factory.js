@@ -96,6 +96,18 @@ app.factory('XTFactory', ['$http', function($http){
     })
   }
 
+  // Get userid detail of user-mail for adding into group
+  factory.getFriend = function(email, cb){
+    $http({
+      method: 'GET',
+      url   : `/users/${email}`
+    }).then(function(friend){
+      cb(friend.data)
+    }, function(err){
+      cb({'error': 'Unable to add friend'})
+    })
+  }
+
   // signIn (login). 'cb' is the callback sent from the controller since the $http request is an async request. It returns a promise which takes in two functions, first one for success and second one for error response
   factory.signIn = function(login, cb){
     $http({
@@ -227,5 +239,22 @@ app.factory('XTFactory', ['$http', function($http){
       cb({'error': 'Unable to retrieve expense details'})
     })
   }
+
+  // createGroup. Create a new group, add friends to it and share an expense sheet with the group.
+  factory.createGroup = function(newGroupInfo, userId, cb){
+    delete newGroupInfo['err']
+    newGroupInfo['userid'] = userId
+    $http({
+      method: 'POST',
+      url   : '/group',
+      data  : newGroupInfo
+    }).then(function(newGroup){
+      console.log(newGroup)
+      cb(newGroup.data)
+    }, function(err){
+      cb({'error': 'Unable to create new group'})
+    })
+  }
+
   return factory
 }])

@@ -33,7 +33,8 @@ module.exports = function(pool, fn){
         if (Sheets.validateName(req.body['sheetName'])){
           res.json({error: `Sheet name is invalid`})
         } else {
-          Sheets.updateSheet(pool, req.body['sheetId'], req.body['sheetName'], function(err, newSheet){
+          let update = {sheetName: req.body['sheetName']}
+          Sheets.updateSheet(pool, req.body['sheetId'], update, function(err, newSheet){
             if (err){
               res.json({error: err})
             } else {

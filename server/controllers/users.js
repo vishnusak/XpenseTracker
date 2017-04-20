@@ -71,7 +71,7 @@ module.exports = function(pool, fn){
         var userId = req.params['userid'],
             groupId= req.params['groupid']
 
-        Users.getUserInfo(pool, userId, function(err, info){
+        Users.getUserInfo(pool, userId, groupId, function(err, info){
           if (err){
             res.json({error: err})
           } else {
@@ -80,5 +80,16 @@ module.exports = function(pool, fn){
         })
       }
       break
+    case 'friend':
+    // return the email id and userid of the friend to be added in the group
+      return function(req, res){
+        Users.getUser(pool, req.params['email'], function(err, info){
+          if (err){
+            res.json({error: err})
+          } else {
+            res.json({friendId: info['user_id']})
+          }
+        })
+      }
   }
 }

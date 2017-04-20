@@ -1,4 +1,5 @@
 <div id="start" ng-click="toggleDropdown($event, 1)">
+
   <nav>
     <h1 ng-click="goHome($event)">Xpense Tracker</h1>
     <div id="logout">
@@ -10,6 +11,7 @@
       </div>
     </div>
   </nav>
+
   <div id="main">
     <div id="addNew">
       <ul>
@@ -19,10 +21,12 @@
     </div>
 
     <div id="mySheets" ng-model="showSheets" ng-show="showSheets">
+
       <div id="heading">
         <span class="material-icons">&#xE02F;</span>
         <h2>My Sheets</h2>
       </div>
+
       <div class="showMyContent">
         <span class="material-icons" ng-show="prevSheet"  ng-click="showPrevSheet()">&#xE408;</span>
         <ul>
@@ -34,7 +38,7 @@
               <i class="material-icons" ng-mouseenter="delTT=true" ng-mouseleave="delTT=false" ng-init="delTT=false" ng-click="$event.stopImmediatePropagation(); deleteSheet(sheets[idx], idx)">&#xE872;
                 <i class="tooltip" ng-show="delTT">DELETE</i>
               </i>
-              <i class="material-icons" ng-mouseenter="shrTT=true" ng-mouseleave="shrTT=false" ng-init="shrTT=false" ng-click="$event.stopImmediatePropagation(); shareSheet(sheets[idx])">&#xE7F0;
+              <i class="material-icons" ng-mouseenter="shrTT=true" ng-mouseleave="shrTT=false" ng-init="shrTT=false" ng-click="$event.stopImmediatePropagation(); shareSheet(sheets[idx])">&#xE80D;
                 <i class="tooltip" ng-show="shrTT">SHARE</i>
               </i>
             </b>
@@ -47,15 +51,30 @@
     </div>
 
     <div id="myGroups" ng-model="showGroups" ng-show="showGroups">
+
       <div id="heading">
         <span class="material-icons">&#xE7EF;</span>
-        <!-- <span class="material-icons">group</span> -->
         <h2>My Groups</h2>
       </div>
+
       <div class="showMyContent">
         <span class="material-icons" ng-show="prevGroup" ng-click="showPrevGroup()">&#xE408;</span>
         <ul>
-          <li ng-repeat="idx in groupIdxArr">{{ groups[idx]['groupName'] }}</li>
+          <li ng-repeat="idx in groupIdxArr" ng-click="showGroup(groups[idx])" ng-mouseenter="groupMenu=true" ng-mouseleave="groupMenu=false" ng-init="groupMenu=false" ng-model="groups[idx]['groupName']">
+            <b ng-show="groupMenu">
+              <i class="material-icons" ng-mouseenter="editTT=true" ng-mouseleave="editTT=false" ng-init="editTT=false" ng-click="$event.stopImmediatePropagation(); renameGroup(groups[idx], idx)">&#xE3C9;
+                <i class="tooltip" ng-show="editTT">RENAME</i>
+              </i>
+              <i class="material-icons" ng-mouseenter="delTT=true" ng-mouseleave="delTT=false" ng-init="delTT=false" ng-click="$event.stopImmediatePropagation(); deleteGroup(groups[idx], idx)">&#xE872;
+                <i class="tooltip" ng-show="delTT">DELETE</i>
+              </i>
+              <i class="material-icons" ng-mouseenter="shrTT=true" ng-mouseleave="shrTT=false" ng-init="shrTT=false" ng-click="$event.stopImmediatePropagation(); editGroup(groups[idx])">&#xE7FE;
+                <i class="tooltip" ng-show="shrTT">EDIT</i>
+              </i>
+            </b>
+            <i class="material-icons">&#xE7EF;</i>
+            {{ groups[idx]['groupName'] }}
+          </li>
         </ul>
         <span class="material-icons" ng-show="nextGroup"  ng-click="showNextGroup()">&#xE409;</span>
       </div>
@@ -87,7 +106,30 @@
         <label>
           <input type="text" ng-model="addGroup['groupName']" placeholder="New Group Name" required><i class="material-icons" ng-show="err['groupName']">&#xE002;</i>
         </label>
-        <p id="button" ng-click="createGroup()">Create Group</p>
+        <div id="friends">
+          <label>
+            <span>Add Friends to Group
+              <i class="material-icons" ng-show="err['groupFriend']">&#xE002;</i>
+            </span>
+            <input type="email" ng-model="addFriend" placeholder="Email Id of Friend">
+            <span class="material-icons"  id="addFriend" ng-click="addFriendToGroup()">&#xE146;</span>
+          </label>
+          <ul>
+            <li ng-repeat="friend in addGroup['groupFriends']">
+              <i class="material-icons" ng-click="remFromGroup($index)">&#xE14C;</i>
+              <i class="friendName">{{ friend['email'] }}</i>
+            </li>
+          </ul>
+        </div>
+        <label>Share a Sheet
+          <i class="material-icons" ng-show="err['groupSheet']">&#xE002;</i>
+        </label>
+        <select ng-model="addGroup['groupSheet']">
+          <option value="" hidden="hidden"></option>
+          <option ng-repeat="sheet in sheets" value="{{sheet['sheet_id']}}">{{ sheet['sheetName'] }}</option>
+        </select>
+        <p class="button" ng-click="createGroup()" ng-show="gcreateBtn">Create Group</p>
+        <p class="button" ng-click="updateGroup()" ng-show="gupdateBtn">Save</p>
       </form>
     </div>
   </div>

@@ -50,9 +50,8 @@ module.exports = {
   },
 
   // updateSheet - update sheet name for given id
-  updateSheet: function(pool, sheetId, sheetName, cb){
+  updateSheet: function(pool, sheetId, sheetUpdate, cb){
     var updateSql    = `update sheets set ? where sheet_id = ${sheetId}`
-    var updatedSheet = {sheetName: sheetName}
 
     pool.getConnection(function(getConnectionErr, connection){
       if (getConnectionErr){
@@ -60,7 +59,7 @@ module.exports = {
         cb(`Unable to get connection`,'')
       }
 
-      connection.query(updateSql, updatedSheet, function(updateSheetQueryErr, results, fields){
+      connection.query(updateSql, sheetUpdate, function(updateSheetQueryErr, results, fields){
         connection.release()
         if (updateSheetQueryErr){
           dbErr("updateSheet:UpdateSheet", updateSheetQueryErr)

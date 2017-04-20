@@ -68,8 +68,7 @@ module.exports = {
   },
   // getUser - get a user's information based on username or email.
   getUser: function(pool, user, cb){
-    // var user = pool.escape(user)
-    var sql = `select u.user_id, u.firstName, u.lastName, u.email, u.userName, u.password, g.group_id from users u, groups g where (u.userName = '${user}' or u.email = '${user}') and g.groupName = u.userName`
+    let sql = `select u.user_id, u.firstName, u.lastName, u.email, u.userName, u.password, g.group_id from users u, groups g where (u.userName = '${user}' or u.email = '${user}') and g.groupName = u.userName`
 
     pool.getConnection(function(getConnectionErr, connection){
       if (getConnectionErr){
@@ -114,9 +113,9 @@ module.exports = {
     })
   },
   // getUserInfo - get a user's group and sheet information based on id
-  getUserInfo: function(pool, id, cb){
-    // var id     = pool.escape(id)
-    var grpSql = `select g.group_id, g.groupName from groups g, groups_has_users gu where gu.user_id = ${id} and gu.group_id = g.group_id`
+  getUserInfo: function(pool, id, gid, cb){
+    // get all groups except the self-named group.
+    var grpSql = `select g.group_id, g.groupName from groups g, groups_has_users gu where gu.user_id = ${id} and gu.group_id = g.group_id and g.group_id != ${gid}`
     var sheetSql= `select s.sheet_id, s.sheetName, s.group_id, s.user_id from sheets s, groups_has_users gu where gu.user_id = ${id} and gu.group_id = s.group_id`
 
     pool.getConnection(function(getConnectionErr, connection){
@@ -130,10 +129,8 @@ module.exports = {
           connection.release()
           dbErr("getUserInfo:grpQuery", grpErr)
           cb(`Unable to getUserInfo`, '')
-        } else if (results.length == 0){
-          cb(`Groups not found`, '')
         } else {
-          var groups = results
+          let groups = results
           connection.query(sheetSql, function(shtErr, results, fields){
             connection.release()
             if (shtErr){
@@ -141,7 +138,7 @@ module.exports = {
               cb(`Unable to getUserInfo`, '')
             } else {
               // this takes into account that the sheetSql can return an empty resultset which is a valid case
-              var sheets = results
+              let sheets = results
               cb('', {groups: groups, sheets: sheets})
             }
           })

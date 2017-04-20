@@ -21,11 +21,15 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   $scope.prevGroup       = false
   $scope.sstartBtn       = true
   $scope.srenameBtn      = false
+  $scope.gcreateBtn      = true
+  $scope.gupdateBtn      = false
   $scope.sheetIdxArr     = []
   $scope.groupIdxArr     = []
   $scope.sheets          = []
   $scope.sheetIdx        = ''
   $scope.groups          = []
+  // addFriend - search for this email in the DB
+  $scope.addFriend       = ''
 
   // initialize the forms
   $scope.addSheet        = {
@@ -33,14 +37,18 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
     err      : ''
   }
   $scope.addGroup        = {
-    groupName: '',
-    err      : ''
+    groupName   : '',
+    groupFriends: [],
+    groupSheet  : '',
+    err         : ''
   }
 
   // initialize the errors
   $scope.err             = {
-    groupName: false,
-    sheetName: false
+    groupName  : false,
+    groupFriend: false,
+    groupSheet : false,
+    sheetName  : false
   }
 
   var sheetStart         = 0,
@@ -57,7 +65,7 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
     $scope.userGroup = $scope.curUser['group_id']
   }
 
-  // Get all the sheets that the user has access to
+  // Get all the sheets / groups that the user has access to
   XTFactory.getUserInfo($scope.curUser['user_id'], $scope.curUser['group_id'], function(userInfoList){
     if ('error' in userInfoList){
       console.log(userInfoList['error'])
@@ -124,17 +132,22 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
 
   // reset the form content
   function resetForms(){
-    $scope.addSheet['sheetName'] = ''
-    $scope.addGroup['groupName'] = ''
+    $scope.addSheet['sheetName']    = ''
+    $scope.addGroup['groupName']    = ''
+    $scope.addGroup['groupFriends'] = []
+    $scope.addGroup['groupSheet']   = ''
+
     resetErr()
   }
 
   // reset the errors on the forms
   function resetErr(){
-    $scope.err['groupName'] = false
-    $scope.err['sheetName'] = false
-    $scope.addSheet['err']  = ''
-    $scope.addGroup['err']  = ''
+    $scope.err['groupName']   = false
+    $scope.err['groupSheet']  = false
+    $scope.err['groupFriend'] = false
+    $scope.err['sheetName']   = false
+    $scope.addSheet['err']    = ''
+    $scope.addGroup['err']    = ''
   }
 
   // validate form inputs
@@ -154,6 +167,14 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
       }
     }
 
+    if ('groupFriends' in form){
+      if (!form['groupFriends'].length){
+        $scope.err['groupFriend']= true
+        form['err']              = `Please add friends to the group`
+        return false
+      }
+    }
+
     if ('sheetName' in form){
       if (!form['sheetName']){
         $scope.err['sheetName'] = true
@@ -166,6 +187,35 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
         form['err']             = `Sheet Name must have only AlphaNumeric characters`
         return false
       }
+    }
+
+    return true
+  }
+
+  // validate the friends being added to a group
+  // -current user shouldn't be added explicitly
+  // -adding a friend who is already on the list
+  function validateFriendList(list, friend=''){
+    resetErr()
+
+    if (!friend){
+      $scope.err['groupFriend'] = true
+      $scope.addGroup['err']    = `Please type in a friend's "Mail Id"`
+      return false
+    }
+
+    if (friend == $scope.curUser['email']){
+      $scope.err['groupFriend'] = true
+      $scope.addGroup['err']    = `You don't need to add yourself`
+      return false
+    }
+
+    let exists = list.reduce((s, v) => {return s += ((v['email'] == friend) ? 1 : 0)}, 0)
+
+    if (exists){
+      $scope.err['groupFriend'] = true
+      $scope.addGroup['err']    = `${friend} already in the list`
+      return false
     }
 
     return true
@@ -235,16 +285,62 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
     $location.url('/')
   }
 
+  // Show the add new group dialog
+  $scope.addNewGroup = function(){
+    $scope.displayAddGroup['display'] = 'flex'
+    $scope.gcreateBtn                 = true
+    $scope.gupdateBtn                 = false
+  }
+
+  // add friend(s) to the group being created
+  $scope.addFriendToGroup = function(){
+    if (validateFriendList($scope.addGroup['groupFriends'], $scope.addFriend)){
+      XTFactory.getFriend($scope.addFriend, function(addedFriend){
+        if ('error' in addedFriend){
+          $scope.err['groupFriend'] = true
+          $scope.addGroup['err']    = addedFriend['error']
+        } else {
+          let friend = {
+            email: $scope.addFriend,
+            id   : addedFriend['friendId']
+          }
+          $scope.addGroup['groupFriends'].push(friend)
+          $scope.addFriend = ''
+        }
+      })
+    }
+  }
+
+  // remove a friend email from the list
+  $scope.remFromGroup = function(idx){
+    $scope.addGroup['groupFriends'].splice(idx, 1)
+  }
+
+  // Create a new group.
+  // New group must have following:
+  // -GroupName
+  // -Creating user's user id
+  // -List of friends to add to group. This must be an array of userids
+  // Optional inputs to new group:
+  // -A sheet to share with this group. This should be a sheetId
+  // Sheet Id is being made optional since it can be added to the group at a later stage also.
+  $scope.createGroup = function(){
+    if (validateForm($scope.addGroup)){
+      XTFactory.createGroup($scope.addGroup, $scope.curUser['user_id'], function(createGroupResp){
+        if ('error' in createGroupResp){
+          $scope.addGroup['err'] = createGroupResp['error']
+        } else {
+          console.log(createGroupResp)
+        }
+      })
+    }
+  }
+
   // Show the add new expense sheet dialog
   $scope.addNewSheet = function(){
     $scope.displayAddSheet['display'] = 'flex'
     $scope.srenameBtn                 = false
     $scope.sstartBtn                  = true
-  }
-
-  // Show the add new group dialog
-  $scope.addNewGroup = function(){
-    $scope.displayAddGroup['display'] = 'flex'
   }
 
   // Start a new sheet with the given name

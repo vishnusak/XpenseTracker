@@ -6,27 +6,40 @@ console.log("|---------------------------------------|")
 
 // import the db query object required.
 var Groups = require('../models/groups')
+var Sheets = require('../models/sheets')
 
 // Export the Groups controller methods
 module.exports = function(pool, fn){
   switch (fn){
-    case 'newgroup':
+    case 'add':
     // Add a new group
       return function(req, res){
         // validate the group name
         if (Groups.validateGroupName(req.body['groupName'])){
           res.json({error: `Group name is invalid`})
         } else {
-          var userId   = req.body['userid']
-          var grpUsers = req.body['userList']
-          grpUsers.push(userId)
-          var newGroup = req.body['groupName']
+          let newGroup     = req.body['groupName']
+          // groupFriends will be an array of ids
+          let groupFriends = req.body['groupFriends'].map((friend) => {return friend['id']})
+          groupFriends.push(req.body['userid'])
+          let groupSheet = ((req.body['groupSheet']) ? req.body['groupSheet'] : '')
 
-          Groups.addGroup(pool, newGroup, userId, grpUsers, function(err, newGroup){
+          Groups.addGroup(pool, newGroup, groupFriends, function(err, newGroupId){
             if (err){
               res.json({error: err})
             } else {
-              res.json(newGroup)
+              if (groupSheet){
+                let update = {group_id: newGroupId['groupId']}
+                Sheets.updateSheet(pool, groupSheet, update, function(err, newSheet){
+                  if (err){
+                    res.json({error: err})
+                  } else {
+                    res.json(newSheet)
+                  }
+                })
+              } else {
+                res.json(newGroupId)
+              }
             }
           })
         }

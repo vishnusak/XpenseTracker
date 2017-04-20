@@ -26,6 +26,7 @@ module.exports = function(app){
   app.post('/login', users(dbConnectPool, 'login'))
   app.post('/register', users(dbConnectPool, 'registration'))
   app.get('/start/:userid-:groupid', users(dbConnectPool, 'start'))
+  app.get('/users/:email', users(dbConnectPool, 'friend'))
 
   app.post('/sheet', sheets(dbConnectPool, 'new'))
   app.put('/sheet', sheets(dbConnectPool, 'update'))
@@ -36,6 +37,6 @@ module.exports = function(app){
   app.delete('/expense/:sheetid-:year-:month-:expenseid', expenses(dbConnectPool, 'delete'))
   app.get('/expense/:sheetid-:year-:month-:list', expenses(dbConnectPool, 'get'))
 
-  app.post('/newgroup', groups(dbConnectPool, 'newgroup'))
+  app.post('/group', groups(dbConnectPool, 'add'))
   app.post('/adduser', groups(dbConnectPool, 'adduser'))
 }

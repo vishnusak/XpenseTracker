@@ -19,12 +19,13 @@ function dbErr(action, err){
 // all CRUD operations will be passed the connection pool variable along with the other parameters necessary
 module.exports = {
   // addGroup - Add a new group and add the users to that group. At a minimum, the group creator will be automatically added to the group
-  addGroup: function(pool, grpName, userId, users, cb){
-    var grpSql  = `insert into groups set ?`
-    // var newGrp  = {groupName: pool.escape(grpName)}
-    var newGrp  = {groupName: grpName}
-    var relSql  = `insert into groups_has_users set ?`
-    var newRel = []
+  addGroup: function(pool, grpName, friends, cb){
+    let grpSql  = `insert into groups set ?`
+    let newGrp  = {groupName: grpName}
+    // need to use the below syntax for insert instead of the "set" syntax because here I will be doing bulk insert
+    let relSql  = `insert into groups_has_users (group_id, user_id) values ?`
+    // The values passed into the bulk insert must be organized as an array of arrays
+    let newRel = []
 
     pool.getConnection(function(getConnectionErr, connection){
       if (getConnectionErr){
@@ -40,26 +41,29 @@ module.exports = {
         }
 
         var grpId = results.insertId
-        for (let i = 0; i < users.length; i++){
-          // newRel.push({group_id: grpId, user_id: pool.escape(users[i])})
-          newRel.push({group_id: grpId, user_id: users[i]})
+        for (let i = 0; i < friends.length; i++){
+          newRel.push([grpId, friends[i]])
         }
-        connection.query(relSql, newRel, function(relQueryErr, results, fields){
+
+        // the values for the bulk insert must be passed to the query as an array.
+        // so essentially in the sql it will ook like [[[1,2], [1,3], [1,4], ...]]
+        connection.query(relSql, [newRel], function(relQueryErr, results, fields){
           connection.release()
           if (relQueryErr){
             dbErr("addGroup:InsertRelation", relQueryErr)
             cb(`Unable to add relationship`, '')
+          } else {
+            cb('', {groupId: grpId})
           }
-
-          cb('', {groupId: grpId})
         })
       })
     })
   },
   // addUserToGroup - Add new user(s) to existing group
   addUserToGroup: function(pool, grpId, users, cb){
-    var relSql = `insert into groups_has_users set ?`
-    var newRel = []
+    // see previous method for explanation on bulk insert syntax
+    let relSql  = `insert into groups_has_users (group_id, user_id) values ?`
+    let newRel = []
 
     pool.getConnection(function(getConnectionErr, connection){
       if (getConnectionErr){
@@ -68,17 +72,17 @@ module.exports = {
       }
 
       for (let i = 0; i < users.length; i++){
-        // newRel.push({group_id: pool.escape(grpId), user_id: pool.escape(users[i])})
-        newRel.push({group_id: grpId, user_id: users[i]})
+        newRel.push([grpId, users[i]])
       }
-      connection.query(relSql, newRel, function(relQueryErr, results, fields){
+
+      connection.query(relSql, [newRel], function(relQueryErr, results, fields){
         connection.release()
         if (relQueryErr){
           dbErr("addUserToGroup:InsertRelation", relQueryErr)
           cb(`Unable to add relationship`, '')
+        } else {
+          cb('', {groupId: grpId})
         }
-
-        cb('', {groupId: grpId})
       })
     })
   },

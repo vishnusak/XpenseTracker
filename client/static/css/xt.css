@@ -481,8 +481,7 @@ body{
             left: 0.1vw;
             top: 0.1vh;
           }
-  #start #addSheetOverlay,
-  #start #addGroupOverlay{
+  #start #addSheetOverlay{
     position: absolute;
     left: 0;
     top: 0;
@@ -495,8 +494,7 @@ body{
     justify-content: center;
     align-items: center;
   }
-  #start #addSheetScreen,
-  #start #addGroupScreen{
+  #start #addSheetScreen{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -504,56 +502,203 @@ body{
     width: 30vw;
     background-color: white;
   }
-    #start #addSheetScreen #cancel,
-    #start #addGroupScreen #cancel{
+    #start #addSheetScreen #cancel{
       background-color: red;
       color: white;
       align-self: flex-end;
       cursor: pointer;
     }
-    #start #addSheetScreen h2,
-    #start #addGroupScreen h2{
+    #start #addSheetScreen h2{
       font-family: 'Josefin Slab', serif;
       font-size: 200%;
       text-align: center;
       margin: 0.5vh 0;
     }
-    #start #addSheetScreen span,
-    #start #addGroupScreen span{
+    #start #addSheetScreen span{
       background-color: red;
       color: white;
       font-weight: bold;
       padding: 0.5vh 0.5vw;
       text-align: center;
     }
-    #start #addSheetScreen form,
+    #start #addSheetScreen form{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+      #start #addSheetScreen form > *{
+        margin: 1vh 1vw;
+      }
+      #start #addSheetScreen form label{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+        #start #addSheetScreen form label input{
+          text-align: center;
+          font-size: 100%;
+          width: 100%;
+          padding: 0.5vh 0.5vw;
+        }
+        #start #addSheetScreen form label i{
+          color: red;
+        }
+      #start #addSheetScreen form .button{
+        align-self: center;
+        font-size: 125%;
+        font-weight: bold;
+        padding: 0 1vw 0 1vw;
+        cursor: pointer;
+      }
+        #start #addSheetScreen form .button:active{
+          position: relative;
+          left: 0.1vw;
+          top: 0.1vh;
+        }
+        #start #addSheetScreen form .button:hover{
+          background-color: red;
+          color: white;
+        }
+  #start #addGroupOverlay{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 30;
+    /*display: none;*/
+    justify-content: center;
+    align-items: center;
+  }
+  #start #addGroupScreen{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60vw;
+    background-color: white;
+  }
+    #start #addGroupScreen #cancel{
+      background-color: red;
+      color: white;
+      align-self: flex-end;
+      cursor: pointer;
+    }
+    #start #addGroupScreen h2{
+      font-family: 'Josefin Slab', serif;
+      font-size: 200%;
+      text-align: center;
+      margin: 0.5vh 0;
+    }
+    #start #addGroupScreen > span{
+      background-color: red;
+      color: white;
+      font-weight: bold;
+      padding: 0.5vh 0.5vw;
+      text-align: center;
+    }
     #start #addGroupScreen form{
       display: flex;
       flex-direction: column;
       width: 100%;
     }
-      #start #addSheetScreen form > *,
       #start #addGroupScreen form > *{
         margin: 1vh 1vw;
       }
-      #start #addSheetScreen form label,
       #start #addGroupScreen form label{
         display: flex;
         justify-content: center;
         align-items: center;
       }
-        #start #addSheetScreen form label input,
         #start #addGroupScreen form label input{
           text-align: center;
           font-size: 100%;
           width: 100%;
           padding: 0.5vh 0.5vw;
         }
-        #start #addSheetScreen form label i,
         #start #addGroupScreen form label i{
           color: red;
         }
-      #start #addSheetScreen form .button,
+      #start #addGroupScreen form #friends{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+        #start #addGroupScreen form #friends > *{
+          width: 49%;
+        }
+        #start #addGroupScreen form #friends label{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+          #start #addGroupScreen form #friends label span{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-weight: bold;
+          }
+            #start #addGroupScreen form #friends label #addFriend{
+              cursor: pointer;
+            }
+              #start #addGroupScreen form #friends label #addFriend:hover{
+                color: red;
+              }
+              #start #addGroupScreen form #friends label #addFriend:active{
+                position: relative;
+                left: 0.1vw;
+                top: 0.1vh;
+              }
+        #start #addGroupScreen form #friends ul{
+          list-style: none;
+          border: 1px solid gray;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+          min-height: 10vh;
+          max-height: 30vh;
+          overflow-y: auto;
+        }
+          #start #addGroupScreen form #friends ul li{
+            margin: 0.5vh 0.5vw;
+            border: 1px solid gray;
+            border-radius: calc((5vh + 5vw) / 20);
+          }
+            #start #addGroupScreen form #friends ul li .friendName{
+              font-style: normal;
+              padding: 0 0.5vw;
+              vertical-align: middle;
+            }
+          #start #addGroupScreen form #friends ul li .material-icons{
+            color: silver;
+            vertical-align: middle;
+            font-size: 100%;
+            margin-left: 0.5vw;
+            cursor: pointer;
+          }
+            #start #addGroupScreen form #friends ul li .material-icons:hover{
+              border-radius: 50%;
+              background-color: red;
+              color: white;
+            }
+            #start #addGroupScreen form #friends ul li .material-icons:active{
+              position: relative;
+              left: 0.1vw;
+              top: 0.1vh;
+            }
+      #start #addGroupScreen form #friends+label{
+        margin-bottom: 0;
+        font-weight: bold;
+      }
+      #start #addGroupScreen form select{
+        text-align-last: center;
+        font-size: 100%;
+        padding: 0.5vh 0.5vw;
+        margin-top: 0;
+      }
       #start #addGroupScreen form .button{
         align-self: center;
         font-size: 125%;
@@ -561,13 +706,11 @@ body{
         padding: 0 1vw 0 1vw;
         cursor: pointer;
       }
-        #start #addSheetScreen form .button:active,
         #start #addGroupScreen form .button:active{
           position: relative;
           left: 0.1vw;
           top: 0.1vh;
         }
-        #start #addSheetScreen form .button:hover,
         #start #addGroupScreen form .button:hover{
           background-color: red;
           color: white;
