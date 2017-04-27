@@ -5,22 +5,22 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema XT
+-- Schema xt
 -- -----------------------------------------------------
--- Schema for the XT site. Will be implemented in mongoDB. Want to use this for visualizing the relationships
+-- Schema for the xt site. Will be implemented in mongoDB. Want to use this for visualizing the relationships
 
 -- -----------------------------------------------------
--- Schema XT
+-- Schema xt
 --
--- Schema for the XT site. Will be implemented in mongoDB. Want to use this for visualizing the relationships
+-- Schema for the xt site. Will be implemented in mongoDB. Want to use this for visualizing the relationships
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `XT` DEFAULT CHARACTER SET utf8 ;
-USE `XT` ;
+CREATE SCHEMA IF NOT EXISTS `xt` DEFAULT CHARACTER SET utf8 ;
+USE `xt` ;
 
 -- -----------------------------------------------------
--- Table `XT`.`users`
+-- Table `xt`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `XT`.`users` (
+CREATE TABLE IF NOT EXISTS `xt`.`users` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
   `firstName` VARCHAR(255) NOT NULL,
   `lastName` VARCHAR(255) NOT NULL,
@@ -37,9 +37,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `XT`.`groups`
+-- Table `xt`.`groups`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `XT`.`groups` (
+CREATE TABLE IF NOT EXISTS `xt`.`groups` (
   `group_id` INT NOT NULL AUTO_INCREMENT,
   `groupName` VARCHAR(255) NOT NULL,
   `creator_id` INT NOT NULL,
@@ -49,16 +49,16 @@ CREATE TABLE IF NOT EXISTS `XT`.`groups` (
   INDEX `fk_groups_users1_idx` (`creator_id` ASC),
   CONSTRAINT `fk_groups_users1`
     FOREIGN KEY (`creator_id`)
-    REFERENCES `XT`.`users` (`user_id`)
+    REFERENCES `xt`.`users` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `XT`.`sheets`
+-- Table `xt`.`sheets`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `XT`.`sheets` (
+CREATE TABLE IF NOT EXISTS `xt`.`sheets` (
   `sheet_id` INT NOT NULL AUTO_INCREMENT,
   `sheetName` VARCHAR(255) NOT NULL,
   `creator_id` INT NOT NULL,
@@ -70,21 +70,21 @@ CREATE TABLE IF NOT EXISTS `XT`.`sheets` (
   INDEX `fk_sheets_groups1_idx` (`group_id` ASC),
   CONSTRAINT `fk_sheets_users1`
     FOREIGN KEY (`creator_id`)
-    REFERENCES `XT`.`users` (`user_id`)
+    REFERENCES `xt`.`users` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_sheets_groups1`
     FOREIGN KEY (`group_id`)
-    REFERENCES `XT`.`groups` (`group_id`)
+    REFERENCES `xt`.`groups` (`group_id`)
     ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `XT`.`expenses`
+-- Table `xt`.`expenses`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `XT`.`expenses` (
+CREATE TABLE IF NOT EXISTS `xt`.`expenses` (
   `expense_id` INT NOT NULL AUTO_INCREMENT,
   `day` INT NOT NULL,
   `month` INT NOT NULL,
@@ -102,16 +102,16 @@ CREATE TABLE IF NOT EXISTS `XT`.`expenses` (
   INDEX `fk_expenses_sheets_idx` (`sheet_id` ASC),
   CONSTRAINT `fk_expenses_sheets`
     FOREIGN KEY (`sheet_id`)
-    REFERENCES `XT`.`sheets` (`sheet_id`)
+    REFERENCES `xt`.`sheets` (`sheet_id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `XT`.`groups_has_users`
+-- Table `xt`.`groups_has_users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `XT`.`groups_has_users` (
+CREATE TABLE IF NOT EXISTS `xt`.`groups_has_users` (
   `group_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`group_id`, `user_id`),
@@ -119,12 +119,12 @@ CREATE TABLE IF NOT EXISTS `XT`.`groups_has_users` (
   INDEX `fk_groups_has_users_groups1_idx` (`group_id` ASC),
   CONSTRAINT `fk_groups_has_users_groups1`
     FOREIGN KEY (`group_id`)
-    REFERENCES `XT`.`groups` (`group_id`)
+    REFERENCES `xt`.`groups` (`group_id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_groups_has_users_users1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `XT`.`users` (`user_id`)
+    REFERENCES `xt`.`users` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
