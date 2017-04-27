@@ -1,43 +1,65 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8' />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<div id="pwdreset" ng-click="toggleDropdown($event, 1)">
+  <nav>
+    <h1 ng-click="goHome($event)">
+      Xpense Tracker
+    </h1>
 
-    <!-- <base href="/"> -->
+    <div id="logout">
+      <div id="username" ng-model="user" ng-click="toggleDropdown($event)">
+        <i class="material-icons">&#xE851;</i>
+        {{ user }}
+      </div>
 
-    <title>XT</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab|Raleway" rel="stylesheet">
-    <!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Raleway" rel="stylesheet"> -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/xt.css">
-  </head>
-  <body>
-    <div id="pwdreset" ng-click="toggleDropdown()">
-      <nav>
-        <h1>Xpense Tracker</h1>
-        <div id="logout">
-          <div id="username" ng-click="toggleDropdown()"><i class="material-icons">&#xE851;</i>{{userName}}</div>
-          <div id="dropdownList">
-            <p>My Profile</p>
-            <p>Reset Password</p>
-            <p>Sign Out</p>
-          </div>
-        </div>
-      </nav>
-      <form>
-        <span ng-click="closeReset()">X</span>
-        <p id="err" ng-show="resetErr">{{resetErr}}</p>
-        <fieldset>
-          <legend>{{userName}}: Reset Password</legend>
-          <label><span>Current Password:</span> <input type="password" ng-model='curPwd'></label>
-          <label><span>New Password:</span> <input type="password" ng-model='newPwd'></label>
-          <label><span>Confirm New Password:</span> <input type="password" ng-model='cnewPwd'></label>
-        </fieldset>
-        <p ng-click="updatePassword()"><i class="material-icons">&#xE161;</i>Save</p>
-      </form>
+      <div id="dropdownList" ng-model="userDropdown" ng-style="userDropdown">
+        <p ng-click="showProfile($event)">My Profile</p>
+        <p ng-click="resetPwd($event)">Reset Password</p>
+        <p ng-click="signOut($event)">Sign Out</p>
+      </div>
     </div>
-  </body>
-</html>
+  </nav>
+
+  <form class="formedit">
+    <span ng-click="closeResetPwd()" class="material-icons">
+      &#xE5CD;
+    </span>
+
+    <fieldset>
+      <legend>
+        Reset Password
+      </legend>
+
+      <p id="err" ng-show="resetErr">
+        {{resetErr}}
+      </p>
+
+      <label>
+        <span>Current Password:</span>
+        <div>
+          <input type="password" ng-model="reset['curPwd']">
+          <i class="material-icons" ng-show="err['curPwd']">&#xE002;</i>
+        </div>
+      </label>
+
+      <label>
+        <span>New Password:</span>
+        <div>
+          <input type="password" ng-model="reset['newPwd']">
+          <i class="material-icons" ng-show="err['newPwd']">&#xE002;</i>
+        </div>
+      </label>
+
+      <label>
+        <span>Confirm New Password:</span>
+        <div>
+          <input type="password" ng-model="reset['cnewPwd']">
+          <i class="material-icons" ng-show="err['cnewPwd']">&#xE002;</i>
+        </div>
+      </label>
+    </fieldset>
+
+    <p ng-click="resetPassword()">
+      <i class="material-icons">&#xE161;</i>
+      Reset
+    </p>
+  </form>
+</div>

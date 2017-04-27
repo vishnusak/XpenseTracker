@@ -1,12 +1,16 @@
 <div id="start" ng-click="toggleDropdown($event, 1)">
 
   <nav>
-    <h1 ng-click="goHome($event)">Xpense Tracker</h1>
+    <h1 ng-click="goHome($event)">
+      Xpense Tracker
+    </h1>
+
     <div id="logout">
       <div id="username" ng-model="user" ng-click="toggleDropdown($event)">
         <i class="material-icons">&#xE851;</i>
         {{ user }}
       </div>
+
       <div id="dropdownList" ng-model="userDropdown" ng-style="userDropdown">
         <p ng-click="showProfile($event)">My Profile</p>
         <p ng-click="resetPwd($event)">Reset Password</p>
@@ -18,8 +22,14 @@
   <div id="main">
     <div id="addNew">
       <ul>
-        <li ng-click="addNewSheet()"><span class="material-icons">&#xE02E;</span>Add a New Sheet</li>
-        <li ng-click="addNewGroup()"><span class="material-icons">&#xE02E;</span>Create a New Group</li>
+        <li ng-click="addNewSheet()">
+          <span class="material-icons">&#xE02E;</span>
+          Add a New Sheet
+        </li>
+        <li ng-click="addNewGroup()">
+          <span class="material-icons">&#xE02E;</span>
+          Create a New Group
+        </li>
       </ul>
     </div>
 

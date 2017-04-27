@@ -127,6 +127,81 @@ module.exports = {
       })
     })
   },
+  // getUserPwdbyId - get users password given a specific user_id
+  getUserPwdById: function(pool, id, cb){
+    let sql = `select u.password from users u where u.user_id = ${id}`
+
+    pool.getConnection(function(getConnectionErr, connection){
+      if (getConnectionErr){
+        dbErr("getUserPwdById:getConnection", getConnectionErr)
+        cb(`Unable to get connection`,'')
+      }
+
+      connection.query(sql,function(queryErr, getUserPwdByIdResults, fields){
+        connection.release()
+        if (queryErr){
+          dbErr("getUserPwdById:Query", queryErr)
+          cb(`Unable to getUserPwdById`, '')
+        } else {
+          cb('', getUserPwdByIdResults[0]['password'])
+        }
+      })
+    })
+  },
+  // updateUser - update user's profile info
+  updateUser: function(pool, id, data, cb){
+    let updUserSql = `update users set ? where user_id = ${id}`
+
+    pool.getConnection(function(getConnectionErr, connection){
+      if (getConnectionErr){
+        dbErr("updateUser:getConnection", getConnectionErr)
+        cb(`Unable to get connection`,'')
+      }
+
+      // this takes into account that the groupSql and sheetSql can return empty resultsets which are valid cases
+      connection.query(updUserSql, data, function(updUserErr, updUser, fields){
+        connection.release()
+        if (updUserErr){
+          dbErr("updateUser:updateQuery", updUserErr)
+          cb(`Unable to Update User`, '')
+        } else {
+          cb('', updUser.insertId)
+        }
+      })
+    })
+  },
+  // updateUserPwd - update a user's password
+  updateUserPwd: function(pool, id, pwd, cb){
+    let updUserPwdSql = `update users set ? where user_id = ${id}`
+
+    bcrypt.hash(pwd, 10, function(hashErr, hash){
+      if (hashErr){
+        dbErr("updateUserPwd:bcrypt", hashErr)
+        cb(`Unable to hash the password`, '')
+      } else {
+        let data = {
+          password: hash
+        }
+
+        pool.getConnection(function(getConnectionErr, connection){
+          if (getConnectionErr){
+            dbErr("updateUserPwd:getConnection", getConnectionErr)
+            cb(`Unable to get connection`,'')
+          } else {
+            connection.query(updUserPwdSql, data, function(updUserPwdErr, updUser, fields){
+              connection.release()
+              if (updUserPwdErr){
+                dbErr("updateUserPwd:update User", updUserPwdErr)
+                cb(`Unable to update user password`, '')
+              } else {
+                cb('', updUser)
+              }
+            })
+          }
+        })
+      }
+    })
+  },
   // validateName - validate the name field(s) sent from the front-end
   validateName: function(name){
     return /[^0-9a-zA-Z]+/.test(name)
@@ -193,7 +268,11 @@ module.exports = {
         console.log(pwdErr)
         cb(`Password Mismatch`)
       } else {
-        cb('')
+        if (pwdRes){
+          cb('')
+        } else {
+          cb(`Password Mismatch`)
+        }
       }
     })
   }

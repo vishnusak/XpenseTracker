@@ -141,6 +141,22 @@ app.factory('XTFactory', ['$http', function($http){
     currentUser = {}
   }
 
+  // updateUser - update changes in current users name / email / username.
+  factory.updateUser = function(action, id, updateUserData, cb){
+    updateUserData['action']  = action
+    updateUserData['user_id'] = id
+    $http({
+      method: 'PUT',
+      url   : '/users',
+      data  : updateUserData
+    }).then(function(updatedUser){
+      cb(updatedUser.data)
+    }, function(err){
+      console.log(err)
+      cb({'error': 'Unable to update user'})
+    })
+  }
+
   // startSheet. create new sheet on the backend, associate it with the user and get back the sheet id
   factory.startSheet = function(userId, sheetName, cb){
     var newSheetData = {

@@ -27,6 +27,7 @@ module.exports = function(app){
   app.post('/register', users(dbConnectPool, 'registration'))
   app.get('/start/:userid-:groupid', users(dbConnectPool, 'start'))
   app.get('/users/:email', users(dbConnectPool, 'friend'))
+  app.put('/users', users(dbConnectPool, 'update'))
 
   app.post('/sheet', sheets(dbConnectPool, 'new'))
   app.put('/sheet', sheets(dbConnectPool, 'update'))

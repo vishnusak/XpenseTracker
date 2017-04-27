@@ -19,6 +19,10 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
     templateUrl: '/profile.html',
     controller : 'profileController'
   })
+  .when('/resetPwd', {
+    templateUrl: '/pwdreset.html',
+    controller : 'resetPwdController'
+  })
   .when('/sheet', {
     templateUrl: '/expenses.html',
     controller : 'expenseController'

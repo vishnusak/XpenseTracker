@@ -1,8 +1,15 @@
 <div id="profile" ng-click="toggleDropdown($event, 1)">
   <nav>
-    <h1 ng-click="goHome($event)">Xpense Tracker</h1>
+    <h1 ng-click="goHome($event)">
+      Xpense Tracker
+    </h1>
+
     <div id="logout">
-      <div id="username" ng-model="user" ng-click="toggleDropdown($event)"><i class="material-icons">&#xE851;</i>{{ user }}</div>
+      <div id="username" ng-model="user" ng-click="toggleDropdown($event)">
+        <i class="material-icons">&#xE851;</i>
+        {{ user }}
+      </div>
+
       <div id="dropdownList" ng-model="userDropdown" ng-style="userDropdown">
         <p ng-click="showProfile($event)">My Profile</p>
         <p ng-click="resetPwd($event)">Reset Password</p>
@@ -10,17 +17,60 @@
       </div>
     </div>
   </nav>
-  <form>
-    <span ng-click="closeProfile()">X</span>
-    <p id="err" ng-show="profileErr">{{profileErr}}</p>
+
+  <form ng-class="formEditClass">
+    <span ng-click="closeProfile()" class="material-icons">
+      &#xE5CD;
+    </span>
+
     <fieldset>
       <legend>My Profile</legend>
-      <label><span>First Name:</span> <input type="text" ng-model='firstName' ng-readonly="readOnly" ng-style="showBorder"></label>
-      <label><span>Last Name:</span> <input type="text" ng-model='lastName' ng-readonly="readOnly" ng-style="showBorder"></label>
-      <label><span>Email:</span> <input type="text" ng-model='email' ng-readonly="readOnly" ng-style="showBorder"></label>
-      <label><span>User Name:</span> <input type="text" ng-model='userName' ng-readonly="readOnly" ng-style="showBorder"></label>
+
+      <p id="err" ng-show="profileErr">
+        {{profileErr}}
+      </p>
+
+      <label>
+        <span>First Name:</span>
+        <div>
+          <input type="text" ng-model="profile['firstName']" ng-readonly="readOnly" ng-class="readOnlyClass">
+          <i class="material-icons" ng-show="err['firstName']">&#xE002;</i>
+        </div>
+      </label>
+
+      <label>
+        <span>Last Name:</span>
+        <div>
+          <input type="text" ng-model="profile['lastName']" ng-readonly="readOnly" ng-class="readOnlyClass">
+          <i class="material-icons" ng-show="err['lastName']">&#xE002;</i>
+        </div>
+      </label>
+
+      <label>
+        <span>Email:</span>
+        <div>
+          <input type="text" ng-model="profile['email']" ng-readonly="readOnly" ng-class="readOnlyClass">
+          <i class="material-icons" ng-show="err['email']">&#xE002;</i>
+        </div>
+      </label>
+
+      <label>
+        <span>User Name:</span>
+        <div>
+          <input type="text" ng-model="profile['userName']" ng-readonly="readOnly" ng-class="readOnlyClass">
+          <i class="material-icons" ng-show="err['userName']">&#xE002;</i>
+        </div>
+      </label>
     </fieldset>
-    <p ng-show="toggleEditSave" ng-click="editProfile()"><i class="material-icons">&#xE3C9;</i>Edit</p>
-    <p ng-hide="toggleEditSave" ng-click="saveProfile()"><i class="material-icons">&#xE161;</i>Save</p>
+
+    <p ng-show="toggleEditSave" ng-click="editProfile()">
+      <i class="material-icons">&#xE3C9;</i>
+      Edit
+    </p>
+
+    <p ng-hide="toggleEditSave" ng-click="saveProfile()">
+      <i class="material-icons">&#xE161;</i>
+      Save
+    </p>
   </form>
 </div>

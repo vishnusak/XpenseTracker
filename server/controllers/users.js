@@ -91,5 +91,55 @@ module.exports = function(pool, fn){
           }
         })
       }
+      break
+    case 'update':
+    // update the user's profile info
+      return function(req, res){
+        let id = req.body['user_id']
+        switch (req.body['action']){
+          case 'profile':
+            let updatedUserData = {
+              firstName: req.body['firstName'],
+              lastName : req.body['lastName'],
+              email    : req.body['email'],
+              userName : req.body['userName']
+            }
+            Users.updateUser(pool, id, updatedUserData, function(err, updatedUser){
+              if (err){
+                res.json({error: err})
+              } else {
+                res.json({user_id: updatedUser})
+              }
+            })
+            break
+          case 'password':
+            Users.getUserPwdById(pool, id, function(err, userPwd){
+              if (err){
+                res.json({error: err})
+              } else {
+                var existingPwd = userPwd
+                Users.chkPwd(req.body['curPwd'], existingPwd, function(err){
+                  if (err){
+                    res.json({error: `Current Password mismatch`})
+                  } else {
+                    if (!Users.validatePwd(req.body['newPwd'], req.body['cnewPwd'])){
+                      res.json({error: `Passsword must have atleast 1 each of UC, LC, Number, Special character(~!@#$%^&*)`})
+                    } else {
+                      Users.updateUserPwd(pool, id, req.body['newPwd'], function(err, updUser){
+                        if (err){
+                          res.json({error: err})
+                        } else {
+                          res.json({user_id: id})
+                        }
+                      })
+                    }
+                  }
+                })
+              }
+            })
+            break
+        }
+      }
+      break
   }
 }
