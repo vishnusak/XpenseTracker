@@ -18,13 +18,13 @@ module.exports = function(pool, fn){
         if (Groups.validateGroupName(req.body['groupName'])){
           res.json({error: `Group name is invalid`})
         } else {
-          let newGroup     = req.body['groupName']
           // groupFriends will be an array of ids
-          let groupFriends = req.body['groupFriends'].map((friend) => {return friend['id']})
+          // let groupFriends = req.body['groupFriends'].map((friend) => {return friend['id']})
+          let groupFriends = req.body['groupFriends']
           groupFriends.push(req.body['userid'])
-          let groupSheet = ((req.body['groupSheet']) ? req.body['groupSheet'] : '')
+          let groupSheet = req.body['groupSheet']
 
-          Groups.addGroup(pool, newGroup, groupFriends, function(err, newGroupId){
+          Groups.addGroup(pool, req.body['groupName'], req.body['userid'], groupFriends, function(err, newGroupId){
             if (err){
               res.json({error: err})
             } else {
@@ -45,28 +45,112 @@ module.exports = function(pool, fn){
         }
       }
       break
-    case 'adduser':
-    // Add new user(s) to existing group
+    case 'update':
+    // Update the given group and the specific attribute of the group based on the flag
       return function(req, res){
-        Groups.addUserToGroup(pool, req.body['groupId'], req.body['users'], function(err, modifiedGroup){
+        switch (req.body['flag']){
+          case 'name':
+            let nameData = {
+              groupName: req.body['name']
+            }
+            Groups.updateGroupName(pool, req.body['id'], nameData, function(err, updGrp){
+              if (err){
+                res.json({error: err})
+              } else {
+                res.json(updGrp)
+              }
+            })
+            break
+          case 'friend':
+            if (req.body['addusers'].length){
+              Groups.addUsersToGroup(pool, req.body['id'], req.body['addusers'], function(err, updGrpAddF){
+                if (err){
+                  res.json({error: err})
+                } else {
+                  if (req.body['remusers'].length){
+                    Groups.delUsersFromGroup(pool, req.body['id'], req.body['remusers'], function(err, updGrpRemF){
+                      if (err){
+                        res.json({error: err})
+                      } else {
+                        res.json(updGrpRemF)
+                      }
+                    })
+                  } else {
+                    res.json(updGrpAddF)
+                  }
+                }
+              })
+            } else {
+              if (req.body['remusers'].length){
+                Groups.delUsersFromGroup(pool, req.body['id'], req.body['remusers'], function(err, updGrpRemF){
+                  if (err){
+                    res.json({error: err})
+                  } else {
+                    res.json(updGrpRemF)
+                  }
+                })
+              }
+            }
+            break
+          case 'sheet':
+            if (req.body['addsheets'].length){
+              let addSheetData = {
+                group_id: req.body['id']
+              }
+              Sheets.updateSheet(pool, req.body['addsheets'], addSheetData, function(err, updGrpAddS){
+                if (err){
+                  res.json({error: err})
+                } else {
+                  if (req.body['remsheets'].length){
+                    Sheets.delSheetGrp(pool, req.body['remsheets'], function(err, updGrpRemS){
+                      if (err){
+                        res.json({error: err})
+                      } else {
+                        res.json(updGrpRemS)
+                      }
+                    })
+                  } else {
+                    res.json(updGrpAddS)
+                  }
+                }
+              })
+            } else {
+              if (req.body['remsheets'].length){
+                Sheets.delSheetGrp(pool, req.body['remsheets'], function(err, updGrpRemS){
+                  if (err){
+                    res.json({error: err})
+                  } else {
+                    res.json(updGrpRemS)
+                  }
+                })
+              }
+            }
+            break
+        }
+      }
+      break
+    case 'getmembers':
+    // Get the list of members in a given group
+      return function(req, res){
+        Groups.getGroupMemberInfo(pool, req.params['groupId'], function(err, members){
           if (err){
             res.json({error: err})
           } else {
-            res.json(modifiedGroup)
+            res.json(members)
           }
         })
       }
       break
-    case 'start':
-    // Get the details about specific user
+    case 'delete':
+    // delete a specific group. This will also remove the relationships between group being deleted and any sheets attached to it.
       return function(req, res){
-        var userId = req.params['userid']
+        let grpId = req.params['groupId']
 
-        Users.getUserInfo(pool, userId, function(err, info){
+        Groups.delGroup(pool, grpId, function(err, delInfo){
           if (err){
             res.json({error: err})
           } else {
-            res.json(info)
+            res.json(delInfo)
           }
         })
       }

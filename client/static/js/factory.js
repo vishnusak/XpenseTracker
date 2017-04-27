@@ -9,8 +9,8 @@
 app.factory('XTFactory', ['$http', function($http){
   var factory      = {},
       currentUser  = {},
-      currentSheet = {}
-      currentGroup = 0,
+      currentSheet = {},
+      currentGroup = {},
       months       = {
         0 : 'Jan',
         1 : 'Feb',
@@ -51,7 +51,7 @@ app.factory('XTFactory', ['$http', function($http){
     currentSheet['sheet_id']  = sheet['sheet_id']
     currentSheet['sheetName'] = sheet['sheetName']
     currentSheet['group_id']  = sheet['group_id']
-    currentSheet['user_id']   = sheet['user_id']
+    currentSheet['creator_id']= sheet['creator_id']
   }
 
   // return the current sheet id
@@ -60,8 +60,11 @@ app.factory('XTFactory', ['$http', function($http){
   }
 
   // save the group id of the current sheet being opened/used
-  factory.setCurrentGroup = function(groupId){
-    currentGroup = groupId
+  factory.setCurrentGroup = function(group, idx){
+    currentGroup['group_id']   = group['group_id']
+    currentGroup['groupName']  = group['groupName']
+    currentGroup['creator_id'] = group['creator_id']
+    currentGroup['idx']        = idx
   }
 
   // return the group id of the current sheet
@@ -76,7 +79,6 @@ app.factory('XTFactory', ['$http', function($http){
     currentUser['email']     = user['email']
     currentUser['firstName'] = user['firstName']
     currentUser['lastName']  = user['lastName']
-    currentUser['group_id']  = user['group_id']
   }
 
   // Return the current user.
@@ -140,9 +142,8 @@ app.factory('XTFactory', ['$http', function($http){
   }
 
   // startSheet. create new sheet on the backend, associate it with the user and get back the sheet id
-  factory.startSheet = function(groupId, userId, sheetName, cb){
+  factory.startSheet = function(userId, sheetName, cb){
     var newSheetData = {
-      'groupId'  : groupId,
       'userId'   : userId,
       'sheetName': sheetName
     }
@@ -249,10 +250,46 @@ app.factory('XTFactory', ['$http', function($http){
       url   : '/group',
       data  : newGroupInfo
     }).then(function(newGroup){
-      console.log(newGroup)
       cb(newGroup.data)
     }, function(err){
       cb({'error': 'Unable to create new group'})
+    })
+  }
+
+  // deleteGroup. Deletes the group based on group id and unconnects any connected sheets
+  factory.deleteGroup = function(grpId, cb){
+    $http({
+      method: 'DELETE',
+      url   : `/group/${grpId}`
+    }).then(function(delGrp){
+      cb(delGrp.data)
+    }, function(err){
+      cb({'error': 'Unable to delete Group'})
+    })
+  }
+
+  // updateGroup. Update aspects of the group based on the update flag which will be 'name', 'friend' or 'sheet'
+  factory.updateGroup = function(data, cb){
+    $http({
+      method: 'PUT',
+      url   : `/group`,
+      data  : data
+    }).then(function(updResp){
+      cb(updResp.data)
+    }, function(err){
+      cb({'error': 'Unable to update group'})
+    })
+  }
+
+  // getMembers. Get the member info for a given group
+  factory.getMembers = function(grpId, cb){
+    $http({
+      method: 'GET',
+      url   : `/group/members/${grpId}`
+    }).then(function(members){
+      cb(members.data)
+    }, function(err){
+      cb({'error': 'Unable to retrieve member info'})
     })
   }
 

@@ -12,25 +12,40 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   $scope.displayAddGroup = {'display': 'none'}
   $scope.curUser         = ''
   $scope.user            = ''
-  $scope.userGroup       = ''
   $scope.showSheets      = false
   $scope.showGroups      = false
-  $scope.nextSheet       = false
-  $scope.nextGroup       = false
-  $scope.prevSheet       = false
-  $scope.prevGroup       = false
+  $scope.nextSheet       = ''
+  $scope.nextGroup       = ''
+  $scope.prevSheet       = ''
+  $scope.prevGroup       = ''
   $scope.sstartBtn       = true
   $scope.srenameBtn      = false
   $scope.gcreateBtn      = true
-  $scope.gupdateBtn      = false
+  $scope.gupdateNameBtn  = false
+  $scope.gupdateFriendsBtn= false
+  $scope.gupdateSheetsBtn= false
+  $scope.gEditBtns       = false
+  $scope.gNameShow       = true
+  $scope.gFriendsShow    = true
+  $scope.gSheetsShow     = true
+  $scope.gSheetList      = true
+  $scope.gAddFriendShow  = true
+  $scope.gRemFriendShow  = true
+  $scope.gSelectSheetShow= true
+  $scope.readonlyClass   = ''
+  $scope.readonly        = false
   $scope.sheetIdxArr     = []
   $scope.groupIdxArr     = []
   $scope.sheets          = []
+  $scope.ownSheets       = []
+  $scope.sheetsInGroup   = []
+  $scope.groupFriends    = []
   $scope.sheetIdx        = ''
   $scope.groups          = []
   // addFriend - search for this email in the DB
   $scope.addFriend       = ''
-
+  // groupSheetSelect - indicates which sheet(s) is(are) selected for sharing with a group
+  $scope.groupSheetSelect= []
   // initialize the forms
   $scope.addSheet        = {
     sheetName: '',
@@ -39,8 +54,13 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   $scope.addGroup        = {
     groupName   : '',
     groupFriends: [],
-    groupSheet  : '',
+    groupSheet  : [],
     err         : ''
+  }
+  let originalGroup   = {
+    groupName   : '',
+    groupFriends: [],
+    groupSheet  : [],
   }
 
   // initialize the errors
@@ -51,7 +71,7 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
     sheetName  : false
   }
 
-  var sheetStart         = 0,
+  let sheetStart         = 0,
       sheetLimit         = 5,
       groupStart         = 0,
       groupLimit         = 5
@@ -62,7 +82,6 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   } else {
     $scope.curUser   = XTFactory.getCurrentUser()
     $scope.user      = $scope.curUser['user']
-    $scope.userGroup = $scope.curUser['group_id']
   }
 
   // Get all the sheets / groups that the user has access to
@@ -75,6 +94,7 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
       if ($scope.sheets.length > 0){
         $scope.showSheets = true
       }
+      getOwnSheets()
       computeSheetIdxArr()
       $scope.groups       = userInfoList['groups']
       if ($scope.groups.length > 0){
@@ -88,10 +108,10 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   function computeSheetIdxArr(){
     let limit = 0
     if ($scope.sheets.length <= (sheetStart + sheetLimit)){
-      $scope.nextSheet = false
+      $scope.nextSheet = ''
       limit = $scope.sheets.length
     } else {
-      $scope.nextSheet = true
+      $scope.nextSheet = 'show'
       limit = sheetStart + sheetLimit
     }
 
@@ -101,9 +121,9 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
     }
 
     if (sheetStart == 0){
-      $scope.prevSheet = false
+      $scope.prevSheet = ''
     } else {
-      $scope.prevSheet = true
+      $scope.prevSheet = 'show'
     }
   }
 
@@ -111,10 +131,10 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   function computeGroupIdxArr(){
     let limit = 0
     if ($scope.groups.length <= (groupStart + groupLimit)){
-      $scope.nextGroup = false
+      $scope.nextGroup = ''
       limit = $scope.groups.length
     } else {
-      $scope.nextGroup = true
+      $scope.nextGroup = 'show'
       limit = groupStart + groupLimit
     }
 
@@ -124,18 +144,62 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
     }
 
     if (groupStart == 0){
-      $scope.prevGroup = false
+      $scope.prevGroup = ''
     } else {
-      $scope.prevGroup = true
+      $scope.prevGroup = 'show'
+    }
+  }
+
+  // remove group_id from sheets when a group is deleted
+  function removeGrpIDFromSheets(grpId){
+    for(let i = 0; i < $scope.sheets.length; i++){
+      if ($scope.sheets[i]['group_id'] == grpId){
+        $scope.sheets[i]['group_id'] = null
+      }
+    }
+    getOwnSheets()
+  }
+
+  // filter the sheets to identify sheets owned by the current user (not shared sheets) to display them in the createGroup dialog
+  function getOwnSheets(){
+    for (let i = 0; i < $scope.sheets.length; i++){
+      if ($scope.sheets[i]['creator_id'] == $scope.curUser['user_id']){
+        $scope.ownSheets.push($scope.sheets[i])
+      }
     }
   }
 
   // reset the form content
   function resetForms(){
     $scope.addSheet['sheetName']    = ''
+
     $scope.addGroup['groupName']    = ''
     $scope.addGroup['groupFriends'] = []
-    $scope.addGroup['groupSheet']   = ''
+    $scope.addGroup['groupSheet']   = []
+
+    $scope.groupFriends             = []
+    $scope.groupSheetSelect         = []
+
+    originalGroup['groupName']      = ''
+    originalGroup['groupFriends']   = []
+    originalGroup['groupSheet']     = []
+
+    $scope.sstartBtn       = true
+    $scope.srenameBtn      = false
+    $scope.gcreateBtn      = true
+    $scope.gupdateNameBtn  = false
+    $scope.gupdateFriendsBtn= false
+    $scope.gupdateSheetsBtn= false
+    $scope.gEditBtns       = false
+    $scope.gNameShow       = true
+    $scope.gFriendsShow    = true
+    $scope.gSheetsShow     = true
+    $scope.gSheetList      = true
+    $scope.readonlyClass   = ''
+    $scope.readonly        = false
+    $scope.gAddFriendShow  = true
+    $scope.gSelectSheetShow= true
+    $scope.gRemFriendShow  = true
 
     resetErr()
   }
@@ -171,6 +235,14 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
       if (!form['groupFriends'].length){
         $scope.err['groupFriend']= true
         form['err']              = `Please add friends to the group`
+        return false
+      }
+    }
+
+    if ('groupSheet' in form){
+      if (!form['groupSheet'].length){
+        $scope.err['groupSheet'] = true
+        form['err']              = `Please share a sheet with the group`
         return false
       }
     }
@@ -222,30 +294,6 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   }
 
   // controller methods
-  // show the next set of sheets - increment by 1
-  $scope.showNextSheet = function(){
-    sheetStart += 1
-    computeSheetIdxArr()
-  }
-
-  // show the prev set of sheets - decrement by 1
-  $scope.showPrevSheet = function(){
-    sheetStart -= 1
-    computeSheetIdxArr()
-  }
-
-  // show the next set of groups - increment by 1
-  $scope.showNextGroup = function(){
-    groupStart += 1
-    computeGroupIdxArr()
-  }
-
-  // show the prev set of groups - decrement by 1
-  $scope.showPrevGroup = function(){
-    groupStart -= 1
-    computeGroupIdxArr()
-  }
-
   // Home
   $scope.goHome = function(event){
     event.stopImmediatePropagation()
@@ -289,12 +337,24 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   $scope.addNewGroup = function(){
     $scope.displayAddGroup['display'] = 'flex'
     $scope.gcreateBtn                 = true
-    $scope.gupdateBtn                 = false
+    $scope.gupdateNameBtn             = false
+    $scope.gupdateFriendsBtn          = false
+    $scope.gupdateSheetsBtn           = false
+    $scope.gEditBtns                  = false
+    $scope.gNameShow                  = true
+    $scope.gFriendsShow               = true
+    $scope.gSheetsShow                = true
+    $scope.gSheetList                 = true
+    $scope.readonlyClass              = ''
+    $scope.readonly                   = false
+    $scope.gAddFriendShow             = true
+    $scope.gSelectSheetShow           = true
+    $scope.gRemFriendShow             = true
   }
 
   // add friend(s) to the group being created
   $scope.addFriendToGroup = function(){
-    if (validateFriendList($scope.addGroup['groupFriends'], $scope.addFriend)){
+    if (validateFriendList($scope.groupFriends, $scope.addFriend)){
       XTFactory.getFriend($scope.addFriend, function(addedFriend){
         if ('error' in addedFriend){
           $scope.err['groupFriend'] = true
@@ -304,7 +364,10 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
             email: $scope.addFriend,
             id   : addedFriend['friendId']
           }
-          $scope.addGroup['groupFriends'].push(friend)
+          // groupFriends is only for displaying on screen and it needs id + email
+          $scope.groupFriends.push(friend)
+          // addGroup['groupFriends'] is for passing on data to the server and this needs only the ids
+          $scope.addGroup['groupFriends'].push(friend['id'])
           $scope.addFriend = ''
         }
       })
@@ -313,7 +376,20 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
 
   // remove a friend email from the list
   $scope.remFromGroup = function(idx){
+    $scope.groupFriends.splice(idx, 1)
     $scope.addGroup['groupFriends'].splice(idx, 1)
+  }
+
+  // toggle the sheet selection while editing a group
+  $scope.toggleSelect = function(sheetId, sheetIdx){
+    let idx = $scope.addGroup['groupSheet'].indexOf(sheetId)
+    if (idx == -1){
+      $scope.addGroup['groupSheet'].push(sheetId)
+      $scope.groupSheetSelect[sheetIdx] = 'selected'
+    } else {
+      $scope.addGroup['groupSheet'].splice(idx, 1)
+      $scope.groupSheetSelect[sheetIdx] = ''
+    }
   }
 
   // Create a new group.
@@ -330,11 +406,361 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
         if ('error' in createGroupResp){
           $scope.addGroup['err'] = createGroupResp['error']
         } else {
-          console.log(createGroupResp)
+          $location.url('/')
         }
       })
     }
   }
+
+  // delete a group. This removes the group and the user relations. Sheets belonging to the group will revert to sheet creators
+  $scope.deleteGroup = function(group, groupIdx){
+    XTFactory.deleteGroup(group['group_id'], function(delGrpResp){
+      if ('error' in delGrpResp){
+        console.log(delGrpResp['error'])
+      } else {
+        resetErr()
+        removeGrpIDFromSheets(group['group_id'])
+        $scope.groups.splice(groupIdx, 1)
+        if ($scope.groups.length < 1){
+          $scope.showGroups = false
+        } else {
+          computeGroupIdxArr()
+        }
+      }
+    })
+  }
+
+  // check if the group is owned by current user or not and accordingly show the group edit menu
+  $scope.isOwnGroup = function(curGroup){
+    return (curGroup['creator_id'] == $scope.curUser['user_id'])
+  }
+
+  // Edit the group. can change group name, group members and sheets attached
+  $scope.editGroupName = function(curGroup=null, groupIdx=null){
+
+    if (!curGroup && !groupIdx){
+      // if this is true it means that function is called from the group-details screen by clicking on the "Edit Name" button. Group details are already retrieved from the DB so there is no need to repeat the process again.
+      curGroup = XTFactory.getCurrentGroup()
+      groupIdx = curGroup['idx']
+    } else {
+      // if this is true, it means the function was called from the group menu bar to "Edit Name". Hence we have to do the full process here
+      XTFactory.setCurrentGroup(curGroup, groupIdx)
+      resetForms()
+      // store details of group in originalGroup so that it can be compared during the update
+      // populate the group name
+      $scope.addGroup['groupName'] = curGroup['groupName']
+      originalGroup['groupName']   = curGroup['groupName']
+    }
+    // show the create group screen with update button and only the group name
+    $scope.displayAddGroup['display'] = 'flex'
+    $scope.gcreateBtn                 = false
+    $scope.gupdateNameBtn             = true
+    $scope.gupdateFriendsBtn          = false
+    $scope.gupdateSheetsBtn           = false
+    $scope.gEditBtns                  = false
+    $scope.gNameShow                  = true
+    $scope.gFriendsShow               = false
+    $scope.gSheetsShow                = false
+    $scope.readonlyClass              = ''
+    $scope.readonly                   = false
+  }
+
+  $scope.updateGroupName = function(){
+    resetErr()
+    if ($scope.addGroup['groupName'] == originalGroup['groupName']){
+      $scope.addGroup['err'] = `No changes detected. Nothing to update.`
+      $scope.err['groupName'] = true
+    } else {
+      let curGroup = XTFactory.getCurrentGroup()
+      let data = {
+        flag: 'name',
+        id  : curGroup['group_id'],
+        name: $scope.addGroup['groupName']
+      }
+      XTFactory.updateGroup(data, function(updGroup){
+        if ('error' in updGroup){
+          $scope.addGroup['err'] = updGroup['error']
+          $scope.err['groupName']= true
+        } else {
+          $location.url('/')
+        }
+      })
+    }
+  }
+
+  $scope.editGroupMember = function(curGroup=null, groupIdx=null){
+
+    if (!curGroup && !groupIdx){
+      // if this is true it means that function is called from the group-details screen by clicking on the "Edit Friends" button. Group details are already retrieved from the DB so there is no need to repeat the process again.
+      curGroup = XTFactory.getCurrentGroup()
+      groupIdx = curGroup['idx']
+    } else {
+      // if this is true, it means the function was called from the group menu bar to "Edit Members". Hence we have to do the full process here
+      XTFactory.setCurrentGroup(curGroup, groupIdx)
+      resetForms()
+
+      $scope.addGroup['groupName'] = curGroup['groupName']
+      originalGroup['groupName']   = curGroup['groupName']
+
+      // get the friends email ids for a given group and store in groupFriends
+      XTFactory.getMembers(curGroup['group_id'], function(members){
+        if ('error' in members){
+          $scope.addGroup['err'] = members['error']
+        } else {
+          resetErr()
+          // store details of group in originalGroup so that it can be compared during the update
+          // show list of friends/members
+          let friends = members['members']
+          for (let i = 0; i < friends.length; i++){
+            if (friends[i]['user_id'] != $scope.curUser['user_id']){
+              let each = {
+                email: friends[i]['email'],
+                id   : friends[i]['user_id']
+              }
+              $scope.groupFriends.push(each)
+              $scope.addGroup['groupFriends'].push(each['id'])
+              originalGroup['groupFriends'].push(each['id'])
+            }
+          }
+        }
+      })
+    }
+
+    // show the create group screen with update button and only the group members
+    $scope.displayAddGroup['display'] = 'flex'
+    $scope.gcreateBtn                 = false
+    $scope.gupdateNameBtn             = false
+    $scope.gupdateFriendsBtn          = true
+    $scope.gupdateSheetsBtn           = false
+    $scope.gEditBtns                  = false
+    $scope.gNameShow                  = true
+    $scope.gFriendsShow               = true
+    $scope.gSheetsShow                = false
+    $scope.readonlyClass              = 'readonly'
+    $scope.readonly                   = true
+    $scope.gAddFriendShow             = true
+    $scope.gRemFriendShow             = true
+  }
+
+  $scope.updateGroupFriends = function(){
+    resetErr()
+
+    let idx            = 0
+    let addedFriends   = []
+    let removedFriends = originalGroup['groupFriends'].map((v) => {return v})
+
+    for (let i = 0; i < $scope.addGroup['groupFriends'].length; i++){
+      idx = removedFriends.indexOf($scope.addGroup['groupFriends'][i])
+      if (idx < 0){
+        addedFriends.push($scope.addGroup['groupFriends'][i])
+      } else {
+        removedFriends.splice(idx, 1)
+      }
+    }
+
+    if (!addedFriends.length && !removedFriends.length){
+      $scope.addGroup['err']    = `No changes detected. Nothing to update.`
+      $scope.err['groupFriend'] = true
+    } else if (!$scope.addGroup['groupFriends'].length){
+      $scope.addGroup['err']    = `Please add friends to the group`
+      $scope.err['groupFriend'] = true
+    } else {
+      let curGroup = XTFactory.getCurrentGroup()
+      let data = {
+        flag: 'friend',
+        id  : curGroup['group_id'],
+        addusers: addedFriends,
+        remusers: removedFriends
+      }
+      XTFactory.updateGroup(data, function(updGroup){
+        if ('error' in updGroup){
+          $scope.addGroup['err'] = updGroup['error']
+          $scope.err['groupFriend']= true
+        } else {
+          $location.url('/')
+        }
+      })
+    }
+  }
+
+  $scope.editGroupSheet = function(curGroup, groupIdx){
+
+    if (!curGroup && !groupIdx){
+      // if this is true it means that function is called from the group-details screen by clicking on the "Edit Sheets" button. Group details are already retrieved from the DB so there is no need to repeat the process again.
+      curGroup = XTFactory.getCurrentGroup()
+      groupIdx = curGroup['idx']
+    } else {
+      // if this is true, it means the function was called from the group menu bar to "Edit Sheets". Hence we have to do the full process here
+      XTFactory.setCurrentGroup(curGroup, groupIdx)
+      resetForms()
+
+      $scope.addGroup['groupName'] = curGroup['groupName']
+      originalGroup['groupName']   = curGroup['groupName']
+
+      // store details of group in originalGroup so that it can be compared during the update
+      // get the group sheets given group
+      for (let i = 0; i < $scope.ownSheets.length; i++){
+        if ($scope.ownSheets[i]['group_id'] == curGroup['group_id']){
+          $scope.addGroup['groupSheet'].push($scope.ownSheets[i]['sheet_id'])
+          originalGroup['groupSheet'].push($scope.ownSheets[i]['sheet_id'])
+          $scope.groupSheetSelect[i] = 'selected'
+        }
+      }
+    }
+
+    // show the create group screen with update button and only the group name
+    $scope.displayAddGroup['display'] = 'flex'
+    $scope.gcreateBtn                 = false
+    $scope.gupdateNameBtn             = false
+    $scope.gupdateFriendsBtn          = false
+    $scope.gupdateSheetsBtn           = true
+    $scope.gEditBtns                  = false
+    $scope.gNameShow                  = true
+    $scope.gFriendsShow               = false
+    $scope.gSheetsShow                = true
+    $scope.gSheetList                 = true
+    $scope.readonlyClass              = 'readonly'
+    $scope.readonly                   = true
+    $scope.gSelectSheetShow           = true
+  }
+
+  $scope.updateGroupSheets = function(){
+    resetErr()
+
+    let idx            = 0
+    let addedSheets    = []
+    let removedSheets  = originalGroup['groupSheet'].map((v) => {return v})
+
+    for (let i = 0; i < $scope.addGroup['groupSheet'].length; i++){
+      idx = removedSheets.indexOf($scope.addGroup['groupSheet'][i])
+      if (idx < 0){
+        addedSheets.push($scope.addGroup['groupSheet'][i])
+      } else {
+        removedSheets.splice(idx, 1)
+      }
+    }
+
+    if (!addedSheets.length && !removedSheets.length){
+      $scope.addGroup['err']   = `No changes detected. Nothing to update.`
+      $scope.err['groupSheet'] = true
+    }  else if (!$scope.addGroup['groupSheet'].length){
+      $scope.addGroup['err']   = `Please share a sheet with the group`
+      $scope.err['groupSheet'] = true
+    } else {
+      let curGroup = XTFactory.getCurrentGroup()
+      let data = {
+        flag: 'sheet',
+        id  : curGroup['group_id'],
+        addsheets: addedSheets,
+        remsheets: removedSheets
+      }
+      XTFactory.updateGroup(data, function(updGroup){
+        if ('error' in updGroup){
+          $scope.addGroup['err']  = updGroup['error']
+          $scope.err['groupSheet']= true
+        } else {
+          $location.url('/')
+        }
+      })
+    }
+  }
+
+  // show the details of a specific group when clicked on
+  $scope.showGroup = function(curGroup, groupIdx){
+    // show the create group screen without the save or update buttons and everything in readonly mode
+    $scope.displayAddGroup['display'] = 'flex'
+    $scope.gcreateBtn                 = false
+    $scope.gupdateNameBtn             = false
+    $scope.gupdateFriendsBtn          = false
+    $scope.gupdateSheetsBtn           = false
+    $scope.gNameShow                  = true
+    $scope.gFriendsShow               = true
+    $scope.gSheetsShow                = true
+    $scope.gSheetList                 = false
+    $scope.readonlyClass              = 'readonly'
+    $scope.readonly                   = true
+    $scope.gAddFriendShow             = false
+    $scope.gRemFriendShow             = false
+    $scope.gSelectSheetShow           = false
+
+    if (curGroup['creator_id'] == $scope.curUser['user_id']){
+      $scope.gEditBtns                = true
+    } else {
+      $scope.gEditBtns                = false
+    }
+
+    XTFactory.setCurrentGroup(curGroup, groupIdx)
+
+    // reset the $scope.addGroup and originalGroup
+    $scope.addGroup['groupName']    = ''
+    $scope.addGroup['groupFriends'] = []
+    $scope.addGroup['groupSheet']   = []
+    $scope.groupFriends             = []
+    $scope.groupSheetSelect         = []
+    originalGroup['groupName']      = ''
+    originalGroup['groupFriends']   = []
+    originalGroup['groupSheet']     = []
+
+    // groupName
+    $scope.addGroup['groupName'] = curGroup['groupName']
+    originalGroup['groupName']   = curGroup['groupName']
+
+    // groupFriends
+    XTFactory.getMembers(curGroup['group_id'], function(members){
+      if ('error' in members){
+        $scope.addGroup['err'] = members['error']
+      } else {
+        resetErr()
+        let friends = members['members']
+        for (let i = 0; i < friends.length; i++){
+          if (friends[i]['user_id'] != $scope.curUser['user_id']){
+            let each = {
+              email: friends[i]['email'],
+              id   : friends[i]['user_id']
+            }
+            $scope.groupFriends.push(each)
+            $scope.addGroup['groupFriends'].push(each['id'])
+            originalGroup['groupFriends'].push(each['id'])
+          }
+        }
+      }
+    })
+
+    // groupSheet
+    $scope.sheetsInGroup = []
+    // this will determine which among the user-owned sheets have been selected to be shared with this group
+    for (let i = 0; i < $scope.ownSheets.length; i++){
+      if ($scope.ownSheets[i]['group_id'] == curGroup['group_id']){
+        $scope.addGroup['groupSheet'].push($scope.ownSheets[i]['sheet_id'])
+        originalGroup['groupSheet'].push($scope.ownSheets[i]['sheet_id'])
+        $scope.groupSheetSelect[i] = 'selected'
+        $scope.sheetsInGroup.push($scope.ownSheets[i])
+      }
+    }
+
+    // this will determine which among all the sheets that the user can access belong to this group. This comes into play when seeing the details of a group not owned by the user
+    if (!$scope.sheetsInGroup.length){
+      for (let i = 0; i < $scope.sheets.length; i++){
+        if ($scope.sheets[i]['group_id'] == curGroup['group_id']){
+          $scope.sheetsInGroup.push($scope.sheets[i])
+        }
+      }
+    }
+  }
+
+  // show the next set of groups - increment by 1
+  $scope.showNextGroup = function(){
+    groupStart += 1
+    computeGroupIdxArr()
+  }
+
+  // show the prev set of groups - decrement by 1
+  $scope.showPrevGroup = function(){
+    groupStart -= 1
+    computeGroupIdxArr()
+  }
+
+// -------------------------------------------- //
 
   // Show the add new expense sheet dialog
   $scope.addNewSheet = function(){
@@ -346,20 +772,27 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
   // Start a new sheet with the given name
   $scope.startSheet = function(){
     if (validateForm($scope.addSheet)){
-      XTFactory.startSheet($scope.curUser['group_id'], $scope.curUser['user_id'], $scope.addSheet['sheetName'], function(startSheetResp){
+      XTFactory.startSheet($scope.curUser['user_id'], $scope.addSheet['sheetName'], function(startSheetResp){
         if ('error' in startSheetResp){
           $scope.addSheet['err'] = startSheetResp['error']
         } else {
-          let newSheet = {
-            sheet_id : startSheetResp['sheetid'],
-            sheetName: $scope.addSheet['sheetName'],
-            group_id : $scope.curUser['group_id'],
-            user_id  : $scope.curUser['user_id']
-          }
-          XTFactory.setCurrentSheet(newSheet)
-          $location.url('/sheet')
+          $location.url('/')
         }
       })
+    }
+  }
+
+  // check if the sheet is owned by current user or not and accordingly show the sheet edit menu
+  $scope.isOwnSheet = function(curSheet){
+    return (curSheet['creator_id'] == $scope.curUser['user_id'])
+  }
+
+  // check if the given sheet is shared with a group or not
+  $scope.sharedSheet = function(curSheet){
+    if (curSheet['group_id']){
+      return true
+    } else {
+      return false
     }
   }
 
@@ -409,9 +842,25 @@ app.controller('startController',['$scope', '$location', 'XTFactory', function($
       } else {
         resetErr()
         $scope.sheets.splice(sheetIdx, 1)
-        computeSheetIdxArr()
+        if ($scope.sheets.length < 1){
+          $scope.showSheets = false
+        } else {
+          computeSheetIdxArr()
+        }
       }
     })
+  }
+
+  // show the next set of sheets - increment by 1
+  $scope.showNextSheet = function(){
+    sheetStart += 1
+    computeSheetIdxArr()
+  }
+
+  // show the prev set of sheets - decrement by 1
+  $scope.showPrevSheet = function(){
+    sheetStart -= 1
+    computeSheetIdxArr()
   }
 
   // Close the Add NewSheet/ NewGroup dialog

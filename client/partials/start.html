@@ -3,7 +3,10 @@
   <nav>
     <h1 ng-click="goHome($event)">Xpense Tracker</h1>
     <div id="logout">
-      <div id="username" ng-model="user" ng-click="toggleDropdown($event)"><i class="material-icons">&#xE851;</i>{{ user }}</div>
+      <div id="username" ng-model="user" ng-click="toggleDropdown($event)">
+        <i class="material-icons">&#xE851;</i>
+        {{ user }}
+      </div>
       <div id="dropdownList" ng-model="userDropdown" ng-style="userDropdown">
         <p ng-click="showProfile($event)">My Profile</p>
         <p ng-click="resetPwd($event)">Reset Password</p>
@@ -28,25 +31,27 @@
       </div>
 
       <div class="showMyContent">
-        <span class="material-icons" ng-show="prevSheet"  ng-click="showPrevSheet()">&#xE408;</span>
+        <span class="material-icons" ng-class="prevSheet" ng-click="showPrevSheet()">&#xE408;</span>
         <ul>
-          <li ng-repeat="idx in sheetIdxArr" ng-click="showSheet(sheets[idx])" ng-mouseenter="sheetMenu=true" ng-mouseleave="sheetMenu=false" ng-init="sheetMenu=false" ng-model="sheets[idx]['sheetName']">
+          <li ng-repeat="idx in sheetIdxArr" ng-click="showSheet(sheets[idx])" ng-mouseenter="sheetMenu=isOwnSheet(sheets[idx])" ng-mouseleave="sheetMenu=false" ng-init="sheetMenu=false" ng-model="sheets[idx]['sheetName']">
             <b ng-show="sheetMenu">
-              <i class="material-icons" ng-mouseenter="editTT=true" ng-mouseleave="editTT=false" ng-init="editTT=false" ng-click="$event.stopImmediatePropagation(); renameSheet(sheets[idx], idx)">&#xE3C9;
-                <i class="tooltip" ng-show="editTT">RENAME</i>
+              <i class="material-icons" ng-mouseenter="editTT=true" ng-mouseleave="editTT=false" ng-init="editTT=false" ng-click="$event.stopImmediatePropagation(); renameSheet(sheets[idx], idx)">
+                <i>&#xE3C9;</i>
+                <i class="tooltip" ng-show="editTT">EDIT NAME</i>
               </i>
-              <i class="material-icons" ng-mouseenter="delTT=true" ng-mouseleave="delTT=false" ng-init="delTT=false" ng-click="$event.stopImmediatePropagation(); deleteSheet(sheets[idx], idx)">&#xE872;
+              <i class="material-icons" ng-mouseenter="delTT=true" ng-mouseleave="delTT=false" ng-init="delTT=false" ng-click="$event.stopImmediatePropagation(); deleteSheet(sheets[idx], idx)">
+                <i>&#xE872;</i>
                 <i class="tooltip" ng-show="delTT">DELETE</i>
               </i>
-              <i class="material-icons" ng-mouseenter="shrTT=true" ng-mouseleave="shrTT=false" ng-init="shrTT=false" ng-click="$event.stopImmediatePropagation(); shareSheet(sheets[idx])">&#xE80D;
-                <i class="tooltip" ng-show="shrTT">SHARE</i>
-              </i>
             </b>
-            <i class="material-icons">&#xE896;</i>
-            {{ sheets[idx]['sheetName'] }}
+            <i class="material-icons">
+              <p>&#xE896;</p>
+              <p class="group-icon" ng-show="sharedSheet(sheets[idx])">&#xE7EF;</p>
+            </i>
+            <p>{{ sheets[idx]['sheetName'] }}</p>
           </li>
         </ul>
-        <span class="material-icons" ng-show="nextSheet"  ng-click="showNextSheet()">&#xE409;</span>
+        <span class="material-icons" ng-class="nextSheet" ng-click="showNextSheet()">&#xE409;</span>
       </div>
     </div>
 
@@ -58,25 +63,32 @@
       </div>
 
       <div class="showMyContent">
-        <span class="material-icons" ng-show="prevGroup" ng-click="showPrevGroup()">&#xE408;</span>
+        <span class="material-icons" ng-class="prevGroup" ng-click="showPrevGroup()">&#xE408;</span>
         <ul>
-          <li ng-repeat="idx in groupIdxArr" ng-click="showGroup(groups[idx])" ng-mouseenter="groupMenu=true" ng-mouseleave="groupMenu=false" ng-init="groupMenu=false" ng-model="groups[idx]['groupName']">
+          <li ng-repeat="idx in groupIdxArr" ng-click="showGroup(groups[idx], idx)" ng-mouseenter="groupMenu=isOwnGroup(groups[idx])" ng-mouseleave="groupMenu=false" ng-init="groupMenu=false" ng-model="groups[idx]['groupName']">
             <b ng-show="groupMenu">
-              <i class="material-icons" ng-mouseenter="editTT=true" ng-mouseleave="editTT=false" ng-init="editTT=false" ng-click="$event.stopImmediatePropagation(); renameGroup(groups[idx], idx)">&#xE3C9;
-                <i class="tooltip" ng-show="editTT">RENAME</i>
+              <i class="material-icons" ng-mouseenter="editN=true" ng-mouseleave="editN=false" ng-init="editN=false" ng-click="$event.stopImmediatePropagation(); editGroupName(groups[idx], idx)">
+                <i>&#xE3C9;</i>
+                <i class="tooltip" ng-show="editN">EDIT NAME</i>
               </i>
-              <i class="material-icons" ng-mouseenter="delTT=true" ng-mouseleave="delTT=false" ng-init="delTT=false" ng-click="$event.stopImmediatePropagation(); deleteGroup(groups[idx], idx)">&#xE872;
+              <i class="material-icons" ng-mouseenter="editF=true" ng-mouseleave="editF=false" ng-init="editF=false" ng-click="$event.stopImmediatePropagation(); editGroupMember(groups[idx], idx)">
+                <i>&#xE7FE;</i>
+                <i class="tooltip" ng-show="editF">EDIT MEMBERS</i>
+              </i>
+              <i class="material-icons" ng-mouseenter="editS=true" ng-mouseleave="editS=false" ng-init="editS=false" ng-click="$event.stopImmediatePropagation(); editGroupSheet(groups[idx], idx)">
+                <i>&#xE14D;</i>
+                <i class="tooltip" ng-show="editS">EDIT SHEETS</i>
+              </i>
+              <i class="material-icons" ng-mouseenter="delTT=true" ng-mouseleave="delTT=false" ng-init="delTT=false" ng-click="$event.stopImmediatePropagation(); deleteGroup(groups[idx], idx)">
+                <i>&#xE872;</i>
                 <i class="tooltip" ng-show="delTT">DELETE</i>
-              </i>
-              <i class="material-icons" ng-mouseenter="shrTT=true" ng-mouseleave="shrTT=false" ng-init="shrTT=false" ng-click="$event.stopImmediatePropagation(); editGroup(groups[idx])">&#xE7FE;
-                <i class="tooltip" ng-show="shrTT">EDIT</i>
               </i>
             </b>
             <i class="material-icons">&#xE7EF;</i>
             {{ groups[idx]['groupName'] }}
           </li>
         </ul>
-        <span class="material-icons" ng-show="nextGroup"  ng-click="showNextGroup()">&#xE409;</span>
+        <span class="material-icons" ng-class="nextGroup"  ng-click="showNextGroup()">&#xE409;</span>
       </div>
     </div>
   </div>
@@ -98,38 +110,110 @@
   </div>
 
   <div id="addGroupOverlay" ng-style="displayAddGroup">
+
     <div id="addGroupScreen">
-      <i id="cancel" ng-click="close()" class="material-icons">&#xE5CD;</i>
+
+      <i id="cancel" ng-click="close()" class="material-icons">
+        &#xE5CD;
+      </i>
+
       <h2>XpenseTracker</h2>
-      <span id="addGroupErr" ng-show="addGroup['err']">{{ addGroup['err'] }}</span>
+
+      <span id="addGroupErr" ng-show="addGroup['err']">
+        {{ addGroup['err'] }}
+      </span>
       <form>
-        <label>
-          <input type="text" ng-model="addGroup['groupName']" placeholder="New Group Name" required><i class="material-icons" ng-show="err['groupName']">&#xE002;</i>
+
+        <label ng-show="gNameShow">
+          <input type="text" ng-model="addGroup['groupName']" placeholder="New Group Name" ng-class="readonlyClass" ng-readonly="readonly">
+
+          <i class="material-icons" ng-show="err['groupName']">
+            &#xE002;
+          </i>
         </label>
-        <div id="friends">
-          <label>
-            <span>Add Friends to Group
+
+        <div id="friends" ng-show="gFriendsShow">
+          <label ng-show="gAddFriendShow">
+
+            <span>
+              Add Friends to Group
               <i class="material-icons" ng-show="err['groupFriend']">&#xE002;</i>
             </span>
+
             <input type="email" ng-model="addFriend" placeholder="Email Id of Friend">
-            <span class="material-icons"  id="addFriend" ng-click="addFriendToGroup()">&#xE146;</span>
+
+            <span class="material-icons" id="addFriend" ng-click="addFriendToGroup()">
+              &#xE146;
+            </span>
           </label>
-          <ul>
-            <li ng-repeat="friend in addGroup['groupFriends']">
-              <i class="material-icons" ng-click="remFromGroup($index)">&#xE14C;</i>
-              <i class="friendName">{{ friend['email'] }}</i>
-            </li>
-          </ul>
+
+          <div id="list">
+            <label>Friends in Group</label>
+
+            <ul>
+              <li ng-repeat="friend in groupFriends">
+                <i class="material-icons" ng-click="remFromGroup($index)" ng-show="gRemFriendShow">&#xE14C;</i>
+                <i class="friendName">{{ friend['email'] }}</i>
+              </li>
+            </ul>
+
+          </div>
+
         </div>
-        <label>Share a Sheet
-          <i class="material-icons" ng-show="err['groupSheet']">&#xE002;</i>
-        </label>
-        <select ng-model="addGroup['groupSheet']">
-          <option value="" hidden="hidden"></option>
-          <option ng-repeat="sheet in sheets" value="{{sheet['sheet_id']}}">{{ sheet['sheetName'] }}</option>
-        </select>
-        <p class="button" ng-click="createGroup()" ng-show="gcreateBtn">Create Group</p>
-        <p class="button" ng-click="updateGroup()" ng-show="gupdateBtn">Save</p>
+
+        <div id="sheets" ng-show="gSheetsShow">
+
+          <label ng-show="gSelectSheetShow">Select Sheet(s) to Share
+            <i class="material-icons" ng-show="err['groupSheet']">&#xE002;</i>
+          </label>
+
+          <label ng-hide="gSelectSheetShow">Shared Sheets</label>
+
+          <div class="sheetlist" ng-show="gSheetList">
+            <div ng-repeat="sheet in ownSheets" class="sheet" ng-class="groupSheetSelect[$index]" ng-click="toggleSelect(sheet['sheet_id'], $index)">
+              <i class="material-icons">
+                <p>&#xE896;</p>
+                <p class="group-icon" ng-show="sharedSheet(sheet)">&#xE7EF;</p>
+              </i>
+              <p>{{ sheet['sheetName'] }}</p>
+            </div>
+          </div>
+
+          <div class="sheetlist" ng-hide="gSheetList">
+            <div ng-repeat="sheet in sheetsInGroup" class="sheet">
+              <i class="material-icons">
+                <p>&#xE896;</p>
+                <p class="group-icon" ng-show="sharedSheet(sheet)">&#xE7EF;</p>
+              </i>
+              <p>{{ sheet['sheetName'] }}</p>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="button" ng-click="createGroup()" ng-show="gcreateBtn">
+          Create Group
+        </p>
+        <p class="button" ng-click="updateGroupName()" ng-show="gupdateNameBtn">
+          Update Name
+        </p>
+        <p class="button" ng-click="updateGroupFriends()" ng-show="gupdateFriendsBtn">
+          Update Friends
+        </p>
+        <p class="button" ng-click="updateGroupSheets()" ng-show="gupdateSheetsBtn">
+          Update Sheets
+        </p>
+        <p id="editbtns" ng-show="gEditBtns">
+          <span class="button" ng-click="editGroupName()">
+            Edit Name
+          </span>
+          <span class="button" ng-click="editGroupMember()">
+            Edit Friends
+          </span>
+          <span class="button" ng-click="editGroupSheet()">
+            Edit Sheets
+          </span>
+        </p>
       </form>
     </div>
   </div>

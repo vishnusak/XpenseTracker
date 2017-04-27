@@ -104,7 +104,7 @@ body{
         #pwdreset nav #logout #username:active,
         #content nav #logout #username:active,
         #expenses nav #logout #username:active{
-          position: relative;
+          /*position: relative;*/
           left: 0.1vw;
           top: 0.1vh;
         }
@@ -405,6 +405,21 @@ body{
               font-size: 250%;
               box-shadow: 0 0 0.5vh black;
               margin-bottom: 1vh;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            #start #main #mySheets .showMyContent ul li > i .group-icon{
+              font-size: 50%;
+              background-color: black;
+              color: white;
+              border-radius: 50%;
+              margin-right: 0.5vw;
+            }
+            #start #main #mySheets .showMyContent ul li > p,
+            #start #main #myGroups .showMyContent ul li > p{
+              width: 100%;
+              text-align: center;
             }
             #start #main #mySheets .showMyContent ul li b,
             #start #main #myGroups .showMyContent ul li b{
@@ -420,7 +435,14 @@ body{
               #start #main #mySheets .showMyContent ul li b .material-icons,
               #start #main #myGroups .showMyContent ul li b .material-icons{
                 position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
               }
+                #start #main #mySheets .showMyContent ul li b .material-icons i,
+                #start #main #myGroups .showMyContent ul li b .material-icons i{
+                  font-style: normal;
+                }
                 #start #main #mySheets .showMyContent ul li b .material-icons:hover,
                 #start #main #myGroups .showMyContent ul li b .material-icons:hover{
                   background-color: red;
@@ -435,18 +457,15 @@ body{
                 }
               #start #main #mySheets .showMyContent ul li b .tooltip,
               #start #main #myGroups .showMyContent ul li b .tooltip{
-                font-style: normal;
-                font-size: 50%;
-                text-align: center;
                 position: absolute;
-                z-index: 1;
-                top: 125%;
-                left: 50%;
-                margin-left: -125%;
-                padding: 0.5vh 0.5vw;
-                border-radius: calc((5vh + 5vw) / 10);
                 background-color: black;
                 color: white;
+                text-align: center;
+                font-size: 50%;
+                padding: 0.5vh 0.5vw;
+                border-radius: calc((5vh + 5vw) / 10);
+                z-index: 25;
+                top: 125%;
               }
                 #start #main #mySheets .showMyContent ul li b .tooltip::after,
                 #start #main #myGroups .showMyContent ul li b .tooltip::after{
@@ -465,18 +484,23 @@ body{
           }
         #start #main #mySheets .showMyContent span,
         #start #main #myGroups .showMyContent span{
+          visibility: hidden;
           display: flex;
           align-items: center;
           cursor: pointer;
         }
-          #start #main #mySheets .showMyContent span:hover,
-          #start #main #myGroups .showMyContent span:hover{
+        #start #main #mySheets .showMyContent .show,
+        #start #main #myGroups .showMyContent .show{
+          visibility: visible;
+        }
+          #start #main #mySheets .showMyContent .show:hover,
+          #start #main #myGroups .showMyContent .show:hover{
             background-color: red;
             color: white;
             box-shadow: 0 0 1vh black;
           }
-          #start #main #mySheets .showMyContent span:active,
-          #start #main #myGroups .showMyContent span:active{
+          #start #main #mySheets .showMyContent .show:active,
+          #start #main #myGroups .showMyContent .show:active{
             position: relative;
             left: 0.1vw;
             top: 0.1vh;
@@ -618,12 +642,19 @@ body{
           width: 100%;
           padding: 0.5vh 0.5vw;
         }
+          #start #addGroupScreen form label .readonly{
+            font-size: 150%;
+            padding: 0.5vh 0.5vw;
+            font-weight: bold;
+            border: none;
+            outline: none;
+          }
         #start #addGroupScreen form label i{
           color: red;
         }
       #start #addGroupScreen form #friends{
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         align-items: center;
       }
         #start #addGroupScreen form #friends > *{
@@ -651,9 +682,14 @@ body{
                 left: 0.1vw;
                 top: 0.1vh;
               }
-        #start #addGroupScreen form #friends ul{
+        #start #addGroupScreen form #friends #list{
+        }
+          #start #addGroupScreen form #friends #list label{
+            font-weight: bold;
+          }
+        #start #addGroupScreen form #friends #list ul{
           list-style: none;
-          border: 1px solid gray;
+          border: 1px solid rgb(169, 169, 169);
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
@@ -662,43 +698,91 @@ body{
           max-height: 30vh;
           overflow-y: auto;
         }
-          #start #addGroupScreen form #friends ul li{
+          #start #addGroupScreen form #friends #list ul li{
             margin: 0.5vh 0.5vw;
-            border: 1px solid gray;
+            border: 1px solid rgb(169, 169, 169);
             border-radius: calc((5vh + 5vw) / 20);
           }
-            #start #addGroupScreen form #friends ul li .friendName{
+            #start #addGroupScreen form #friends #list ul li .friendName{
               font-style: normal;
               padding: 0 0.5vw;
               vertical-align: middle;
             }
-          #start #addGroupScreen form #friends ul li .material-icons{
+          #start #addGroupScreen form #friends #list ul li .material-icons{
             color: silver;
             vertical-align: middle;
             font-size: 100%;
             margin-left: 0.5vw;
             cursor: pointer;
           }
-            #start #addGroupScreen form #friends ul li .material-icons:hover{
+            #start #addGroupScreen form #friends #list ul li .material-icons:hover{
               border-radius: 50%;
               background-color: red;
               color: white;
             }
-            #start #addGroupScreen form #friends ul li .material-icons:active{
+            #start #addGroupScreen form #friends #list ul li .material-icons:active{
               position: relative;
               left: 0.1vw;
               top: 0.1vh;
             }
-      #start #addGroupScreen form #friends+label{
+      #start #addGroupScreen form #sheets label{
         margin-bottom: 0;
         font-weight: bold;
       }
-      #start #addGroupScreen form select{
-        text-align-last: center;
-        font-size: 100%;
-        padding: 0.5vh 0.5vw;
-        margin-top: 0;
+      #start #addGroupScreen form #sheets .sheetlist{
+        border: 1px solid rgb(169, 169, 169);
+        min-height: 15vh;
+        max-height: 15vh;
+        overflow-y: auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        flex-wrap: wrap;
       }
+        #start #addGroupScreen form #sheets .sheetlist .sheet{
+          width: 10%;
+          margin: 0.5vh 0.25vw 1vh;
+          padding: 0.5vh 0;
+          font-size: 80%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: center;
+          cursor: pointer;
+        }
+          #start #addGroupScreen form #sheets .sheetlist .sheet .material-icons{
+            box-shadow: 0 0 0.25vh black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          #start #addGroupScreen form #sheets .sheetlist .sheet .material-icons .group-icon{
+            font-size: 50%;
+            background-color: black;
+            color: white;
+            border-radius: 50%;
+            margin-right: 0.20vw;
+          }
+          /*#start #main #mySheets .showMyContent ul li > p,
+          #start #main #myGroups .showMyContent ul li > p{
+            width: 100%;
+            text-align: center;
+          }*/
+
+          #start #addGroupScreen form #sheets .sheetlist .sheet > p{
+            font-weight: bold;
+            margin: 0.5vh 0;
+          }
+        #start #addGroupScreen form #sheets .sheetlist .selected{
+          background-color: black;
+        }
+          #start #addGroupScreen form #sheets .sheetlist .selected .material-icons{
+            box-shadow: 0 0 0.25vh white;
+            color: white;
+          }
+          #start #addGroupScreen form #sheets .sheetlist .selected p{
+            color: white;
+          }
       #start #addGroupScreen form .button{
         align-self: center;
         font-size: 125%;
@@ -715,6 +799,11 @@ body{
           background-color: red;
           color: white;
         }
+      #start #addGroupScreen form #editbtns{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
 /* Start page */
 
 /* Profile Page */

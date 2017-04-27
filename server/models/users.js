@@ -22,53 +22,37 @@ function dbErr(action, err){
 module.exports = {
   // addNewUser - handle inserting the new user from the registration screen. the 'register' object will have firstName, lastName, email, userName, password
   addNewUser: function(pool, register, cb){
-    var sqlUsers    = `insert into users set ?`
-    var sqlGroups   = `insert into groups set ?`
-    var sqlRelation = `insert into groups_has_users set ?`
+    let sqlUsers    = `insert into users set ?`
 
     bcrypt.hash(register['password'], 10, function(hashErr, hash){
       if (hashErr){
         dbErr("addNewUser:bcrypt", hashErr)
         cb(`Unable to hash the password`, '')
-      }
-      register['password'] = hash
+      } else {
+        register['password'] = hash
 
-      pool.getConnection(function(getConnectionErr, connection){
-        if (getConnectionErr){
-          dbErr("addNewUser:getConnection", getConnectionErr)
-          cb(`Unable to get connection`,'')
-        }
-
-        connection.query(sqlUsers, register, function(userQueryErr, userResults, userFields){
-          if (userQueryErr){
-            connection.release()
-            dbErr("addNewUser:InsertUser", userQueryErr)
-            cb(`Unable to run user query`, '')
-          }
-          // After inserting the new user, insert a new record in the 'groups' table. Every new user will automatically get a self-named group created.
-          connection.query(sqlGroups, {groupName: register.userName}, function(grpQueryErr, grpResults, grpFields){
-            if (grpQueryErr){
+        pool.getConnection(function(getConnectionErr, connection){
+          if (getConnectionErr){
+            dbErr("addNewUser:getConnection", getConnectionErr)
+            cb(`Unable to get connection`,'')
+          } else {
+            connection.query(sqlUsers, register, function(userQueryErr, addNewUserResults, userFields){
               connection.release()
-              dbErr("addNewUser:InsertGroup", grpQueryErr)
-              cb(`Unable to run group query`, '')
-            }
-            // After inserting the new group, insert a new record in the 'groups_has_users' table to maintain the relationship.
-            connection.query(sqlRelation, {group_id: grpResults.insertId, user_id: userResults.insertId}, function(relQueryErr, relResults, relFields){
-              connection.release()
-              if (relQueryErr){
-                dbErr("addNewUser:InsertRelation", relQueryErr)
-                cb(`Unable to run relation query`, '')
+              if (userQueryErr){
+                dbErr("addNewUser:InsertUser", userQueryErr)
+                cb(`Unable to run user query`, '')
+              } else {
+                cb('', addNewUserResults)
               }
-              cb('', userResults)
             })
-          })
+          }
         })
-      })
+      }
     })
   },
   // getUser - get a user's information based on username or email.
   getUser: function(pool, user, cb){
-    let sql = `select u.user_id, u.firstName, u.lastName, u.email, u.userName, u.password, g.group_id from users u, groups g where (u.userName = '${user}' or u.email = '${user}') and g.groupName = u.userName`
+    let sql = `select u.user_id, u.firstName, u.lastName, u.email, u.userName, u.password from users u where (u.userName = '${user}' or u.email = '${user}')`
 
     pool.getConnection(function(getConnectionErr, connection){
       if (getConnectionErr){
@@ -76,47 +60,46 @@ module.exports = {
         cb(`Unable to get connection`,'')
       }
 
-      connection.query(sql,function(queryErr, results, fields){
+      connection.query(sql,function(queryErr, getUserResults, fields){
         connection.release()
         if (queryErr){
           dbErr("getUser:Query", queryErr)
           cb(`Unable to getUser`, '')
-        } else if (results.length == 0){
+        } else if (getUserResults.length == 0){
           cb(`User not found`, '')
         } else {
-          cb('', results[0])
+          cb('', getUserResults[0])
         }
       })
     })
   },
   // getUserById - get a user's information based on id
   getUserById: function(pool, id, cb){
-    // var id = pool.escape(id)
-    var sql = `select u.user_id, u.firstName, u.lastName, u.email, u.userName, g.group_id from users u, groups g where u.user_id = ${id} and g.groupName = u.userName`
+    let sql = `select u.user_id, u.firstName, u.lastName, u.email, u.userName from users u where u.user_id = ${id}`
+
     pool.getConnection(function(getConnectionErr, connection){
       if (getConnectionErr){
         dbErr("getUserById:getConnection", getConnectionErr)
         cb(`Unable to get connection`,'')
       }
 
-      connection.query(sql,function(queryErr, results, fields){
+      connection.query(sql,function(queryErr, getUserByIdResults, fields){
         connection.release()
         if (queryErr){
           dbErr("getUserById:Query", queryErr)
           cb(`Unable to getUserById`, '')
-        } else if (results.length == 0){
+        } else if (getUserByIdResults.length == 0){
           cb(`User not found`, '')
         } else {
-          cb('', results[0])
+          cb('', getUserByIdResults[0])
         }
       })
     })
   },
   // getUserInfo - get a user's group and sheet information based on id
   getUserInfo: function(pool, id, gid, cb){
-    // get all groups except the self-named group.
-    var grpSql = `select g.group_id, g.groupName from groups g, groups_has_users gu where gu.user_id = ${id} and gu.group_id = g.group_id and g.group_id != ${gid}`
-    var sheetSql= `select s.sheet_id, s.sheetName, s.group_id, s.user_id from sheets s, groups_has_users gu where gu.user_id = ${id} and gu.group_id = s.group_id`
+    let grpSql = `select g.group_id, g.groupName, g.creator_id from groups g, groups_has_users gu where gu.user_id = ${id} and gu.group_id = g.group_id order by g.group_id`
+    let sheetSql= `select s.sheet_id, s.sheetName, s.group_id, s.creator_id from sheets s, groups_has_users gu where gu.user_id = ${id} and gu.group_id = s.group_id union select s.sheet_id, s.sheetName, s.group_id, s.creator_id from sheets s where s.creator_id = ${id} order by sheet_id`
 
     pool.getConnection(function(getConnectionErr, connection){
       if (getConnectionErr){
@@ -124,46 +107,23 @@ module.exports = {
         cb(`Unable to get connection`,'')
       }
 
-      connection.query(grpSql,function(grpErr, results, fields){
+      // this takes into account that the groupSql and sheetSql can return empty resultsets which are valid cases
+      connection.query(grpSql,function(grpErr, groups, fields){
         if (grpErr){
           connection.release()
           dbErr("getUserInfo:grpQuery", grpErr)
           cb(`Unable to getUserInfo`, '')
         } else {
-          let groups = results
-          connection.query(sheetSql, function(shtErr, results, fields){
+          connection.query(sheetSql, function(shtErr, sheets, fields){
             connection.release()
             if (shtErr){
               dbErr("getUserInfo:shtQuery", shtErr)
               cb(`Unable to getUserInfo`, '')
             } else {
-              // this takes into account that the sheetSql can return an empty resultset which is a valid case
-              let sheets = results
               cb('', {groups: groups, sheets: sheets})
             }
           })
         }
-      })
-    })
-  },
-  // getAllUsers - get a list of all users in the system
-  getAllUsers: function(pool, cb){
-    var sql = `select user_id, email from users`
-
-    pool.getConnection(function(getConnectionErr, connection){
-      if (getConnectionErr){
-        dbErr("getAllUsers:getConnection", getConnectionErr)
-        cb(`Unable to get connection`,'')
-      }
-
-      connection.query(sql, function(queryErr, results, fields){
-        connection.release()
-        if (queryErr){
-          dbErr("getAllUsers:Query", queryErr)
-          cb(`Unable to get users`,'')
-        }
-
-        cb('', {users: results})
       })
     })
   },

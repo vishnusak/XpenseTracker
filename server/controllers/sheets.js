@@ -17,7 +17,7 @@ module.exports = function(pool, fn){
         if (Sheets.validateName(req.body['sheetName'])){
           res.json({error: `Sheet name is invalid`})
         } else {
-          Sheets.addSheet(pool, req.body['groupId'], req.body['userId'], req.body['sheetName'], function(err, newSheet){
+          Sheets.addSheet(pool, req.body['userId'], req.body['sheetName'], function(err, newSheet){
             if (err){
               res.json({error: err})
             } else {

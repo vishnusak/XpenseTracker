@@ -38,5 +38,7 @@ module.exports = function(app){
   app.get('/expense/:sheetid-:year-:month-:list', expenses(dbConnectPool, 'get'))
 
   app.post('/group', groups(dbConnectPool, 'add'))
-  app.post('/adduser', groups(dbConnectPool, 'adduser'))
+  app.delete('/group/:groupId', groups(dbConnectPool, 'delete'))
+  app.put('/group', groups(dbConnectPool, 'update'))
+  app.get('/group/members/:groupId', groups(dbConnectPool, 'getmembers'))
 }
