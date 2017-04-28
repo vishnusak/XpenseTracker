@@ -4,6 +4,7 @@ App to keep track of expenses. WebSite: http://50.116.12.156
 # To Do
 - Features
 - [ ] Visualization of expense trends (using dimple or d3)
+- [ ] Admin page
 - [ ] Site map (will be a guide for first time users)
 
 
